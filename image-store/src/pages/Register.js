@@ -4,7 +4,7 @@ const Register = () => {
   return <div>
     <h1>Register</h1>
     <form method="post">
-        First name:
+        <label>First name:</label>
         <input type='text' /><br />
         Last name:
         <input type='text' /> <br />
