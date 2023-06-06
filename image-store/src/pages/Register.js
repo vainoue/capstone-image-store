@@ -6,13 +6,13 @@ const Register = () => {
     <form method="post">
         <label>First name:</label>
         <input type='text' /><br />
-        Last name:
+        <label>Last name:</label>
         <input type='text' /> <br />
-        Email:
+        <label>Email:</label>
         <input type='email' /><br />
-        Password:
+        <labell>Password</labell>
         <input type='password' /><br />
-        Confirm Password:
+        <label>Confirm Password</label>
         <input type='password' /><br />
         <input type='submit' value={"Confirm Registration"}/>
     </form>
