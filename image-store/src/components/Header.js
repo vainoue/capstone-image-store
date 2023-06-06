@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { BiCart, BiLike, BiMenu, BiSearch, BiUser } from 'react-icons/bi';
+import '../styles/Header.css';
 
 const Header = () => {
   return (
