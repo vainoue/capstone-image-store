@@ -1,0 +1,15 @@
+.image-card {
+  background-color: white;
+  border-radius: 10px;
+  border: 1px solid red;
+}
+.image-card .image-details {
+  color: var(--color-1c1c1b);
+}
+.image-card .product-image img {
+  width: 100%;
+  border-radius: 9px 9px 0px 0px;
+}
+.action-bar {
+  color: var(--color-1c1c1b);
+}
