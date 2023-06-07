@@ -1,15 +1,21 @@
 .image-card {
   background-color: white;
-  border-radius: 10px;
-  border: 1px solid red;
 }
 .image-card .image-details {
   color: var(--color-1c1c1b);
 }
 .image-card .product-image img {
   width: 100%;
-  border-radius: 9px 9px 0px 0px;
 }
-.action-bar {
-  color: var(--color-1c1c1b);
+.image-card .addToCart {
+  background-color: black;
+}
+.image-card .addToCart:hover {
+  background-color: black;
+  transform: scale(1.05);
+}
+.like-icon {
+  top: 3%;
+  right: 5px;
+  color: var(--color-f474b4);
 }
