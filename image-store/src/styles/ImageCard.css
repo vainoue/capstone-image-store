@@ -8,10 +8,10 @@
   width: 100%;
 }
 .image-card .addToCart {
-  background-color: black;
+  background-color: var(--color-1c1c1b);
 }
 .image-card .addToCart:hover {
-  background-color: black;
+  background-color: var(--color-1c1c1b);
   transform: scale(1.05);
 }
 .like-icon {
