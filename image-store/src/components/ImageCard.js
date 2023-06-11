@@ -27,12 +27,20 @@ const ImageCard = ({ image }) => {
             <div className="like-icon position-absolute">
               {isHovered && <BsSuitHeart className="fs-2" />}
             </div>
-            <div className="product-image">
-              <img src={image.imageSrc} alt={image.title} />
-            </div>
+            <Link to={`/image/${image._id}`}>
+              <div className="product-image">
+                <img src={image.imageSrc} alt={image.title} />
+              </div>
+            </Link>
             <div className="d-flex align-items-center justify-content-between">
               <div className="image-details mt-3 ms-2">
-                <h5 className="image-title">{image.title} </h5>
+                <Link to={`/image/${image._id}`}>
+                  <h5 className="image-title">
+                    {image.title.length > 15
+                      ? `${image.title.substr(0, 14)}...`
+                      : `${image.title.substr(0, 14)}`}
+                  </h5>
+                </Link>
                 <p className="image-price">${image.price} </p>
               </div>
               <div className="action-bar">

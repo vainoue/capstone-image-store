@@ -33,7 +33,9 @@ const Header = () => {
           <div className="row align-items-center">
             <div className="col-2">
               <h2>
-                <Link className="text-white">DevCorner</Link>
+                <Link className="text-white" to="/">
+                  DevCorner
+                </Link>
               </h2>
             </div>
             <div className="col-6">
@@ -112,32 +114,47 @@ const Header = () => {
                     >
                       <li>
                         <Link className="dropdown-item text-white" to="#">
-                          Action
+                          Exploration and Production
                         </Link>
                       </li>
                       <li>
                         <Link className="dropdown-item text-white" to="#">
-                          Another action
+                          Refining and Processing
                         </Link>
                       </li>
                       <li>
                         <Link className="dropdown-item text-white" to="#">
-                          Something else here
+                          Transportation and Distribution
                         </Link>
                       </li>
                       <li>
                         <Link className="dropdown-item text-white" to="#">
-                          Something else here
+                          Renewable Energy and Sustainability
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="dropdown-item text-white" to="#">
+                          Economics and Markets
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="dropdown-item text-white" to="#">
+                          Health, Safety, and Environment (HSE)
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="dropdown-item text-white" to="#">
+                          Technology and Innovation
                         </Link>
                       </li>
                     </ul>
                   </div>
                 </div>
-                <div className="menu-links">
+                {/* <div className="menu-links">
                   <div className="d-flex align-items-center gap-15">
                     <NavLink to="/">Home</NavLink>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
