@@ -7,7 +7,7 @@
   overflow: auto; /* Enable scrolling if buttons exceed container height */
 }
 
-div {
+.image-description {
   text-align: justify;
   text-justify: inter-word;
 }
