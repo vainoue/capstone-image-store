@@ -35,7 +35,7 @@
 }
 .header-bottom .dropdown-menu {
   background-color: var(--color-131921);
-  width: 100%;
+  /* width: 100%; */
   transform: translate3d(0px, 45px, 0px) !important;
 }
 .header-bottom .dropdown-item {

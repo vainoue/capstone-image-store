@@ -7,6 +7,13 @@
 .image-card .product-image img {
   width: 100%;
 }
+.image-card .image-details a {
+  color: var(--color-1c1c1b);
+}
+.image-card .image-details a:hover {
+  text-decoration: underline;
+}
+
 .image-card .addToCart {
   background-color: var(--color-1c1c1b);
 }
