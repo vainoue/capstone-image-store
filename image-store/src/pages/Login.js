@@ -19,8 +19,8 @@ const Login = () => {
         //console.log(email, password); display the value on console
         
         // insert backend URL to check email and password
-        // const post = {email, password};
-        // await axiosSet.post("/url", {
+        //const post = {email, password};
+        //await axiosSet.post("/url", {
         //     body: post, 
         // });     
     };
