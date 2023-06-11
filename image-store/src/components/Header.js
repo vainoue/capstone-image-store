@@ -66,7 +66,7 @@ const Header = () => {
                   <Link className="d-flex align-items-center gap-10 text-white">
                     <BiUser className="fs-1" />
                     <p className="mb-0">
-                      Log in
+                    <NavLink to="/login">Log in</NavLink>
                       <br />
                       My Account
                     </p>
