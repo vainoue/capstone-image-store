@@ -33,7 +33,7 @@ const Register = () => {
       phone,
       address,
       password,
-      role: "admin",
+      role: "user",
     });
 
   }
