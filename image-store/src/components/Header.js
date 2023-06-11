@@ -53,7 +53,7 @@ const Header = () => {
             <div className="col-4">
               <div className="header-upper-links d-flex align-items-center justify-content-between">
                 <div>
-                  <Link className="d-flex align-items-center gap-10 text-white">
+                  <Link className="link d-flex align-items-center gap-10 text-white p-1">
                     <BiLike className="fs-1" />
                     <p className="mb-0">
                       Like
@@ -64,7 +64,7 @@ const Header = () => {
                 </div>
                 <div>
                   <Link
-                    className="d-flex align-items-center gap-10 text-white"
+                    className="link d-flex align-items-center gap-10 text-white p-1"
                     to="/login"
                   >
                     <BiUser className="fs-1" />
@@ -76,7 +76,7 @@ const Header = () => {
                   </Link>
                 </div>
                 <div>
-                  <Link className="d-flex align-items-center gap-10 text-white">
+                  <Link className="link d-flex align-items-center gap-10 text-white p-1">
                     <BiCart className="fs-1" />
                     <div className="d-flex flex-column">
                       <span className="badge bg-white text-dark">0</span>

@@ -2,12 +2,21 @@
   border-bottom: 1px solid var(--color-3b4149);
   background-color: var(--color-131921);
 }
+.header-top-strip a:hover {
+  text-decoration: underline;
+  display: inline-block;
+}
+
 .header-upper {
   background-color: var(--color-131921);
 }
 .header-upper .input-group-text {
   background-color: var(--color-febd69);
 }
+.header-upper-links .link:hover {
+  box-shadow: 0 0 0 0.5px white; /* Change the color and size of the box shadow to your desired values */
+}
+
 .header-bottom {
   background-color: var(--color-232f3e);
 }
