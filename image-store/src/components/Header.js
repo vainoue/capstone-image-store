@@ -63,10 +63,13 @@ const Header = () => {
                   </Link>
                 </div>
                 <div>
-                  <Link className="d-flex align-items-center gap-10 text-white">
+                  <Link
+                    className="d-flex align-items-center gap-10 text-white"
+                    to="/login"
+                  >
                     <BiUser className="fs-1" />
                     <p className="mb-0">
-                    <NavLink to="/login">Log in</NavLink>
+                      Log in
                       <br />
                       My Account
                     </p>

@@ -1,54 +1,131 @@
-import React from 'react';
-import '../styles/Login.css';
-import { NavLink } from 'react-router-dom';
+import React, { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Button, Card, CardContent, CardHeader } from '@mui/material';
+import * as Yup from 'yup';
 import axiosSet from '../axiosConfig';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+// import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+
+import '../styles/Login.css';
 
 const Login = () => {
+  const [error, setError] = useState('');
 
-    const navigate = useNavigate()
+  const navigate = useNavigate();
 
-    const [email, setEmail] = useState()
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email('Invalid email address')
+      .required('Email is required'),
+    password: Yup.string().required('Password is required'),
+  });
 
-    const [password, setPassword] = useState()
+  const signIn = async (values) => {
+    try {
+      const post = { email: values.email, password: values.password };
+      await axiosSet.post('/url', {
+        body: post,
+      });
 
-    const signIn = async (e) => {
-        e.preventDefault();
+      //   //Implement firebase auth
+      //   await signInWithEmailAndPassword(getAuth(), values.email, values.password);
 
-        //console.log(email, password); display the value on console
-        
-        // insert backend URL to check email and password
-        //const post = {email, password};
-        //await axiosSet.post("/url", {
-        //     body: post, 
-        // });     
-    };
+      // Successful login, navigate to another route
+      navigate('/home');
+    } catch (error) {
+      // Handle error if login fails
+      setError(error.message);
+    }
+  };
 
   return (
-  <div className='login-body'>
-    <h1>Login</h1>
-    <form onSubmit={(e) => signIn(e)}>
-        <label htmlFor="email">Email:</label>
-        <input
-            type="text"
-            name="email"
-            id="email"
-            placeholder="Enter your email"
-            onChange={(e) => setEmail(e.target.value)}
-        /><br />
-        <label htmlFor="password">Password:</label>
-        <input
-            type="password"
-            name="password"
-            id="password"
-            placeholder="Enter your password"
-            onChange={(e) => setPassword(e.target.value)}
-        /> <br />
-        <input type='submit' value="Sign in"/>
-        <NavLink to="/register">Don't have an account yet? Sign up!</NavLink>
-    </form>
-  </div>
-)};
+    <>
+      <Helmet>
+        <title>Sign In</title>
+      </Helmet>
+      <h1 className="text-center mt-5">DevCorner</h1>
+      <div className="sign-in-body d-flex align-items-center justify-content-center flex-column mt-2">
+        <Card
+          className="signin-card mt-4"
+          variant="outlined"
+          sx={{
+            width: 300,
+            padding: 1,
+          }}
+        >
+          <CardHeader
+            title="Sign In"
+            className="signin-card-header mt-2"
+            sx={{
+              fontSize: 20,
+            }}
+          />
+          <CardContent className="signin-card-content">
+            {error && <p className="error">{error}</p>}
+            <Formik
+              initialValues={{
+                email: '',
+                password: '',
+              }}
+              validationSchema={validationSchema}
+              onSubmit={signIn}
+            >
+              <Form>
+                <div>
+                  <label htmlFor="email">Email</label>
+                  <Field
+                    type="text"
+                    name="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    className="signin-field"
+                  />
+                  <ErrorMessage
+                    name="email"
+                    component="div"
+                    className="error"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="password" className="mt-3">
+                    Password
+                  </label>
+                  <Field
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    className="signin-field"
+                  />
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="error"
+                  />
+                </div>
+
+                <div>
+                  <Button
+                    type="submit"
+                    className="mt-3"
+                    color="primary"
+                    variant="contained"
+                  >
+                    Sign in
+                  </Button>
+                  <NavLink to="/register" className="mt-3">
+                    Don't have an account yet? Sign up!
+                  </NavLink>
+                </div>
+              </Form>
+            </Formik>
+          </CardContent>
+        </Card>
+      </div>
+    </>
+  );
+};
 
 export default Login;
