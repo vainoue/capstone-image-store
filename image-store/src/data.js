@@ -8,6 +8,11 @@ const data = {
     categories: ['Exploration and Production', 'Oil'],
     imageSrc: '/images/catbanner-01.jpg',
   })),
+  user: {
+    _id: 1,
+    uId: '',
+    cart: [],
+  },
 };
 
 export default data;
