@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Pagination } from '@mui/material';
 import ImageCard from './ImageCard';
 
-const ImageCardsPagination = ({ data, imagesPerPage }) => {
+const ImageCardsPagination = ({ images, imagesPerPage, handleAddToCart }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const handlePageChange = (event, pageNumber) => {
@@ -11,8 +11,8 @@ const ImageCardsPagination = ({ data, imagesPerPage }) => {
 
   const indexOfLastItem = currentPage * imagesPerPage;
   const indexOfFirstItem = indexOfLastItem - imagesPerPage;
-  const currentItems = data.images.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(data.images.length / imagesPerPage);
+  const currentItems = images.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(images.length / imagesPerPage);
 
   return (
     <>
@@ -21,7 +21,11 @@ const ImageCardsPagination = ({ data, imagesPerPage }) => {
           <h3 className="section-heading">Image Collection</h3>
         </div>
         {currentItems.map((image) => (
-          <ImageCard key={image._id} image={image} />
+          <ImageCard
+            key={image._id}
+            image={image}
+            handleAddToCart={handleAddToCart}
+          />
         ))}
       </div>
       <div className="pagination-container d-flex align-items-center justify-content-center mt-5">

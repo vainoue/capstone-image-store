@@ -4,7 +4,7 @@ import { BsCartPlus, BsSuitHeart, BsSuitHeartFill } from 'react-icons/bs';
 import '../styles/ImageCard.css';
 import { Button, Card } from '@mui/material';
 
-const ImageCard = ({ image }) => {
+const ImageCard = ({ image, handleAddToCart }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseEnter = () => {
@@ -47,6 +47,7 @@ const ImageCard = ({ image }) => {
                 <Button
                   className="addToCart text-white p-2 me-2"
                   variant="text"
+                  onClick={() => handleAddToCart(image._id)}
                 >
                   Add To Cart <BsCartPlus className="fs-4 ms-2" />
                 </Button>
