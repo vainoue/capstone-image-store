@@ -10,6 +10,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import ImageInformation from './pages/ImageInformation';
 import data from './data';
+import CartPage from './pages/CartPage';
 
 function App() {
   // const [users, setUsers] = useState();
@@ -69,6 +70,7 @@ function App() {
             <Route path="about" element={<About />} />
             <Route path="contact" element={<Contact />} />
             <Route path="image/:imageId" element={<ImageInformation />} />
+            <Route path="/:userId/cart" element={<CartPage />} />
           </Route>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />

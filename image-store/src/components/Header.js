@@ -29,7 +29,7 @@ const Header = ({ user }) => {
               </p>
             </div>
             <div className="col-1">
-              <NavLink to="/contsact" className="text-end text-white mb-0">
+              <NavLink to="/contact" className="text-end text-white mb-0">
                 Contact
               </NavLink>
             </div>
@@ -88,7 +88,7 @@ const Header = ({ user }) => {
                 <div className="cart-container">
                   <Link
                     className="link d-flex align-items-center gap-10 text-white p-1"
-                    to="/cart"
+                    to={`${user._id}/cart`}
                   >
                     <BiCart className="fs-1" />
                     <div className="d-flex flex-column">
