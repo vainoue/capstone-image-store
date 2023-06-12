@@ -30,12 +30,11 @@ function App() {
   // useEffect(() => {
   //   getUsers();
   // }, [])
+  const [user, setUser] = useState(data.user);
 
   const handleAddToCart = (imageId) => {
     // Check if the image already exists in the cart
-    const isAlreadyInCart = data.user.cart.some(
-      (image) => image._id === imageId
-    );
+    const isAlreadyInCart = user.cart.some((image) => image._id === imageId);
 
     if (isAlreadyInCart) {
       // Product ID already exists in the cart, handle accordingly
@@ -45,22 +44,23 @@ function App() {
 
     // Add the image to the cart
     const addedImage = data.images.find((image) => image._id === imageId);
-    data.user.cart.push(addedImage);
+    const updatedUser = { ...user, cart: [...user.cart, addedImage] };
+    setUser(updatedUser);
 
     console.log(`Adding image`, addedImage);
-    console.log(data.user);
+    console.log(updatedUser);
   };
 
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Layout user={data.user} />}>
+          <Route path="/" element={<Layout user={user} />}>
             <Route
               index
               element={
                 <Home
-                  user={data.user}
+                  user={user}
                   images={data.images}
                   handleAddToCart={handleAddToCart}
                 />
