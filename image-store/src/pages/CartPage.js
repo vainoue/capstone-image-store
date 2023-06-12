@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Cart = () => {
+const CartPage = () => {
   return (
     <div>
       <h1>Cart</h1>
@@ -8,4 +8,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+export default CartPage;

@@ -6,7 +6,7 @@ import '../styles/ImageInformation.css';
 import { Button, ThemeProvider, createTheme } from '@mui/material';
 import { BsCartCheck, BsCartPlus } from 'react-icons/bs';
 
-const ImageInformation = () => {
+const ImageInformation = ({ user, handleAddToCart }) => {
   const { imageId } = useParams();
   const image = data.images.find((image) => image._id === parseInt(imageId));
 
@@ -72,6 +72,7 @@ const ImageInformation = () => {
                     variant="contained"
                     color="addCart"
                     fullWidth={true}
+                    onClick={() => handleAddToCart(image._id)}
                   >
                     Add To Cart <BsCartPlus className="fs-4 ms-2" />
                   </Button>
