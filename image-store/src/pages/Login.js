@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Button, Card, CardContent, CardHeader } from '@mui/material';
 import * as Yup from 'yup';
@@ -44,7 +44,9 @@ const Login = () => {
       <Helmet>
         <title>Sign In</title>
       </Helmet>
-      <h1 className="text-center mt-5">DevCorner</h1>
+      <Link to="/" className="d-flex justify-content-center">
+        <h1 className="text-center mt-5">DevCorner</h1>
+      </Link>
       <div className="sign-in-body d-flex align-items-center justify-content-center flex-column mt-2">
         <Card
           className="signin-card mt-4"
@@ -105,8 +107,7 @@ const Login = () => {
                     className="error"
                   />
                 </div>
-
-                <div>
+                <div className="d-flex flex-column align-items-center">
                   <Button
                     type="submit"
                     className="mt-3"
@@ -115,14 +116,28 @@ const Login = () => {
                   >
                     Sign in
                   </Button>
-                  <NavLink to="/register" className="mt-3">
-                    Don't have an account yet? Sign up!
-                  </NavLink>
+                  <div className="mt-3">
+                    <NavLink to="/forgot-password">Forgot password?</NavLink>
+                    <NavLink to="/register">
+                      Don't have an account yet? Sign up!
+                    </NavLink>
+                  </div>
                 </div>
               </Form>
             </Formik>
           </CardContent>
         </Card>
+        <footer className="py-4 fixed-bottom">
+          <div className="container-xxl">
+            <div className="row">
+              <div className="col-12">
+                <p className="text-center mb-0 text-white">
+                  &copy; {new Date().getFullYear()}; Developer's Corner
+                </p>
+              </div>
+            </div>
+          </div>
+        </footer>
       </div>
     </>
   );
