@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { BiCart, BiLike, BiMenu, BiSearch, BiUser } from 'react-icons/bi';
 import '../styles/Header.css';
+import { UserContext } from '../contexts/UserContext';
 
-const Header = ({ user }) => {
+const Header = () => {
+  const { user } = useContext(UserContext);
   const { cart } = user;
 
   const cartImageCount = cart.length;

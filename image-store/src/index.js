@@ -4,12 +4,18 @@ import './index.css';
 import { HelmetProvider } from 'react-helmet-async';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { ImageProvider } from './contexts/ImageContext';
+import { UserProvider } from './contexts/UserContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <HelmetProvider>
-      <App />
+      <ImageProvider>
+        <UserProvider>
+          <App />
+        </UserProvider>
+      </ImageProvider>
     </HelmetProvider>
   </React.StrictMode>
 );

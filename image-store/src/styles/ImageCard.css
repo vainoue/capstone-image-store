@@ -13,14 +13,14 @@
 .image-card .image-details a:hover {
   text-decoration: underline;
 }
-
+/* 
 .image-card .addToCart {
   background-color: var(--color-1c1c1b);
 }
 .image-card .addToCart:hover {
   background-color: var(--color-1c1c1b);
   transform: scale(1.05);
-}
+} */
 .like-icon {
   top: 3%;
   right: 5px;
