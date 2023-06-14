@@ -19,7 +19,13 @@ const Register = () => {
     email: Yup.string()
       .email('Invalid email address')
       .required('Email is required'),
-    password: Yup.string().required('Password is required'),
+    password: Yup.string()
+      .required('Password is required')
+      .min(8, 'Password must be at least 8 characters')
+      .matches( /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]+$/,
+        'Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special symbol' ),
+    phone: Yup.string()
+      .matches( /^[0-9\- ]{10}$/, 'Phone number must contain 10 digits' ),
   })
 
   const [firstName, setFirstName] = useState()
