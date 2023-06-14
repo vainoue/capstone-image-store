@@ -1,27 +1,45 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import data from '../data';
 import { Helmet } from 'react-helmet-async';
 import '../styles/ImageInformation.css';
-import { Button, ThemeProvider, createTheme } from '@mui/material';
-import { BsCartCheck, BsCartPlus } from 'react-icons/bs';
+import { Button, ThemeProvider, createTheme, styled } from '@mui/material';
+import {
+  BsCartCheck,
+  BsCartPlus,
+  BsSuitHeart,
+  BsSuitHeartFill,
+} from 'react-icons/bs';
+import { UserContext } from '../contexts/UserContext';
+import { ImageContext } from '../contexts/ImageContext';
 
-const ImageInformation = ({ user, handleAddToCart }) => {
+const CartButton = styled(Button)(({ theme, disabled }) => ({
+  padding: '0.5rem 1rem',
+  backgroundColor: disabled ? theme.palette.grey[400] : '#ffe666',
+  color: disabled ? theme.palette.text.secondary : '#1c1c1b',
+  '&:hover': {
+    backgroundColor: disabled ? theme.palette.grey[400] : '#ffd900',
+  },
+}));
+
+const ImageInformation = () => {
+  const { user, handleAddToCart, handleToggleLike } = useContext(UserContext);
+  const { images } = useContext(ImageContext);
+
   const { imageId } = useParams();
-  const image = data.images.find((image) => image._id === parseInt(imageId));
+  const image = images.find((image) => image._id === parseInt(imageId));
 
   const theme = createTheme({
     palette: {
-      addCart: {
-        main: '#ffe666',
-        text: '#1c1c1b',
-      },
       buyNow: {
         main: '#ffad33',
         text: '#1c1c1b',
       },
     },
   });
+
+  const isLiked = user.like.some((likedImage) => likedImage._id === image._id);
+  const isInCart = user.cart.some((cartImage) => cartImage._id === image._id);
 
   if (!image) {
     return <h1>Image not found</h1>;
@@ -64,19 +82,36 @@ const ImageInformation = ({ user, handleAddToCart }) => {
                 <p className="image-price">
                   <span className="me-1">Price: </span>${image.price}{' '}
                 </p>
+                <div className="like-icon">
+                  {isLiked ? (
+                    <BsSuitHeartFill
+                      className="fs-2"
+                      onClick={() => handleToggleLike(image._id)}
+                    />
+                  ) : (
+                    <BsSuitHeart
+                      className="fs-2"
+                      onClick={() => handleToggleLike(image._id)}
+                    />
+                  )}
+                </div>
               </div>
               <div className="action-bar mt-4">
-                <ThemeProvider theme={theme}>
-                  <Button
-                    className="addToCart"
-                    variant="contained"
-                    color="addCart"
-                    fullWidth={true}
-                    onClick={() => handleAddToCart(image._id)}
-                  >
-                    Add To Cart <BsCartPlus className="fs-4 ms-2" />
-                  </Button>
-                </ThemeProvider>
+                <CartButton
+                  className="addToCart"
+                  fullWidth={true}
+                  onClick={() => handleAddToCart(image._id)}
+                  disabled={isInCart}
+                >
+                  {isInCart ? (
+                    <>Already In Cart</>
+                  ) : (
+                    <>
+                      Add To Cart <BsCartPlus className="fs-4 ms-2" />
+                    </>
+                  )}
+                </CartButton>
+
                 <ThemeProvider theme={theme}>
                   <Button
                     className="buyItNow mt-3"

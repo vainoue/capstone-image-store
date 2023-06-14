@@ -11,6 +11,7 @@ const data = {
   user: {
     _id: 1,
     uId: '',
+    like: [],
     cart: [],
   },
 };
