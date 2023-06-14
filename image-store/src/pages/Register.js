@@ -4,9 +4,23 @@ import { NavLink } from 'react-router-dom';
 import axiosSet from '../axiosConfig';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Button, Card, CardContent, CardHeader } from '@mui/material';
+import * as Yup from 'yup';
+import { Helmet } from 'react-helmet-async';
+
 
 const Register = () => {
-  const navigate = useNavigate()
+
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email('Invalid email address')
+      .required('Email is required'),
+    password: Yup.string().required('Password is required'),
+  })
 
   const [firstName, setFirstName] = useState()
   const [lastName, setLastName] = useState()
@@ -16,85 +30,175 @@ const Register = () => {
   const [password, setPassword] = useState()
 
   const signUp = async (e) => {
-    e.preventDefault();
 
     console.log(email,
-                firstName,
-                lastName,
-                phone,
-                address,
-                password);
-
-    await axiosSet.post("/api/user", {
-      userId: 98761234,
-      email,
       firstName,
       lastName,
       phone,
       address,
-      password,
+      password);
+
+    await axiosSet.post("/api/user", {
+      userId: 987654321,
+      email: e.email,
+      firstName: e.firstName,
+      lastName: e.lastName,
+      phone: e.phone,
+      address: e.address,
+      password: e.password,
       role: "user",
     });
 
-  }
+    navigate('/');
+
+  };
 
   return (
-    <div className='register-body'>
-      <h1>Register</h1>
-      <form onSubmit={(e) => signUp(e)}>
-        <label htmlFor="firstName">First name:</label>
-        <input
-          type='text'
-          name="firstName"
-          id="firstName"
-          placeholder="Insert your first name"
-          onChange={(e) => setFirstName(e.target.value)}
-        /><br />
-        <label htmlFor="lastName">Last name:</label>
-        <input
-          type='text'
-          name="lastName"
-          id="lastName"
-          placeholder="Insert your last name"
-          onChange={(e) => setLastName(e.target.value)}
-        /> <br />
-        <label htmlFor="email">Email:</label>
-        <input
-          type='email'
-          name="email"
-          id="email"
-          placeholder="Insert your email"
-          onChange={(e) => setEmail(e.target.value)}
-        /><br />
-        <label htmlFor="phone">Phone</label>
-        <input
-          type="tel"
-          name="phone"
-          id="phone"
-          placeholder="1234567890"
-          onChange={(e) => setPhone(e.target.value)}
-        /><br />
-        <label htmlFor="address">Address</label>
-        <input
-          type="text"
-          name="address"
-          id="address"
-          placeholder="Insert your address"
-          onChange={(e) => setAddress(e.target.value)}
-        /><br />
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          placeholder="Enter your password"
-          onChange={(e) => setPassword(e.target.value)}
-        /> <br />
-        <input type='submit' value="Confirm Registration" />
-        <NavLink to="/login">Already have an account? Sign in!</NavLink>
-      </form>
-    </div>
-  )
+    <>
+      <Helmet>
+        <title>Register</title>
+      </Helmet>
+      <h1 className="text-center mt-5">DevCorner</h1>
+      <div className="sign-up-body d-flex align-items-center justify-content-center flex-column mt-2">
+        <Card
+          className="signup-card mt-4"
+          variant="outlined"
+          sx={{
+            width: 300,
+            padding: 1,
+          }}
+        >
+          <CardHeader
+            title="Register"
+            className="signup-card-header mt-2"
+            sx={{
+              fontSize: 20,
+            }}
+          />
+          <CardContent className="signup-card-content">
+            {error && <p className="error">{error}</p>}
+            <Formik
+              initialValues={{
+                firstName: '',
+                lastName: '',
+                email: '',
+                phone: '',
+                address: '',
+                password: '',
+              }}
+              validationSchema={validationSchema}
+              onSubmit={signUp}
+            >
+              <Form>
+                <div>
+                  <label htmlFor="firstName" className="mt-3">First name:</label>
+                  <Field
+                    type="text"
+                    name="firstName"
+                    id="firstName"
+                    placeholder="Insert your first name"
+                    className="signup-field"
+                  />
+                  <ErrorMessage
+                    name="firstName"
+                    component="div"
+                    className="error"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="lastName" className="mt-3">Last name:</label>
+                  <Field
+                    type="text"
+                    name="lastName"
+                    id="lastName"
+                    placeholder="Insert your last name"
+                    className="signup-field"
+                  />
+                  <ErrorMessage
+                    name="lastname"
+                    component="div"
+                    className="error"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="mt-3">Email:</label>
+                  <Field
+                    type="text"
+                    name="email"
+                    id="email"
+                    placeholder="Insert your email"
+                    className="signup-field"
+                  />
+                  <ErrorMessage
+                    name="email"
+                    component="div"
+                    className="error"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="phone" className="mt-3">Phone:</label>
+                  <Field
+                    type="tel"
+                    name="phone"
+                    id="phone"
+                    placeholder="1234567890"
+                    className="signup-field"
+                  />
+                  <ErrorMessage
+                    name="phone"
+                    component="div"
+                    className="error"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="address" className="mt-3">Address:</label>
+                  <Field
+                    type="text"
+                    name="address"
+                    id="address"
+                    placeholder="Insert your address"
+                    className="signup-field"
+                  />
+                  <ErrorMessage
+                    name="address"
+                    component="div"
+                    className="error"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="password" className="mt-3">Password:</label>
+                  <Field
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    className="signup-field"
+                  />
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="error"
+                  />
+                </div>
+
+                <div>
+                  <Button
+                    type="submit"
+                    className="mt-3"
+                    color="primary"
+                    variant="contained"
+                  >
+                    Confirm Registration
+                  </Button>
+                  <NavLink to="/login" className="mt-3">Already have an account? Sign in!</NavLink>
+                </div>
+              </Form>
+            </Formik>
+          </CardContent>
+        </Card>
+      </div >
+    </>
+  );
 };
 
 export default Register;
