@@ -6,11 +6,13 @@ import * as Yup from 'yup';
 import axiosSet from '../axiosConfig';
 import { Helmet } from 'react-helmet-async';
 // import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 
 import '../styles/Login.css';
 
 const Login = () => {
   const [error, setError] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const navigate = useNavigate();
 
@@ -37,6 +39,10 @@ const Login = () => {
       // Handle error if login fails
       setError(error.message);
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
   };
 
   return (
@@ -89,24 +95,38 @@ const Login = () => {
                     className="error"
                   />
                 </div>
-
                 <div>
                   <label htmlFor="password" className="mt-3">
                     Password
                   </label>
-                  <Field
-                    type="password"
-                    name="password"
-                    id="password"
-                    placeholder="Enter your password"
-                    className="signin-field"
-                  />
+
+                  <div className="password-field">
+                    <Field
+                      type={passwordVisible ? 'text' : 'password'}
+                      name="password"
+                      id="password"
+                      placeholder="Enter your password"
+                      className="signin-field"
+                    />
+                    {passwordVisible ? (
+                      <AiOutlineEye
+                        className="password-icon"
+                        onClick={togglePasswordVisibility}
+                      />
+                    ) : (
+                      <AiOutlineEyeInvisible
+                        className="password-icon"
+                        onClick={togglePasswordVisibility}
+                      />
+                    )}
+                  </div>
                   <ErrorMessage
                     name="password"
                     component="div"
                     className="error"
                   />
                 </div>
+
                 <div className="d-flex flex-column align-items-center">
                   <Button
                     type="submit"

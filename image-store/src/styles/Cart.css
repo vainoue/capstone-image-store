@@ -1,0 +1,24 @@
+.cart-header,
+.cart-item {
+  border-bottom: 1px solid #eaeaea;
+}
+.cart-header h4 {
+  font-size: 13px;
+  color: var(--color-777777);
+}
+
+.cart-col-1 {
+  width: 15%;
+}
+
+.cart-col-2 {
+  width: 50%;
+}
+
+.cart-col-3 {
+  width: 5%;
+}
+
+.cart-col-4 {
+  width: 5%;
+}
