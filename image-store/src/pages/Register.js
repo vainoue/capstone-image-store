@@ -1,6 +1,6 @@
 import React from 'react';
 import '../styles/Register.css';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import axiosSet from '../axiosConfig';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -22,10 +22,10 @@ const Register = () => {
     password: Yup.string()
       .required('Password is required')
       .min(8, 'Password must be at least 8 characters')
-      .matches( /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]+$/,
-        'Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special symbol' ),
+      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]+$/,
+        'Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special symbol'),
     phone: Yup.string()
-      .matches( /^[0-9\- ]{10}$/, 'Phone number must contain 10 digits' ),
+      .matches(/^[0-9\- ]{10}$/, 'Phone number must contain 10 digits'),
   })
 
   const [firstName, setFirstName] = useState()
@@ -64,7 +64,9 @@ const Register = () => {
       <Helmet>
         <title>Register</title>
       </Helmet>
-      <h1 className="text-center mt-5">DevCorner</h1>
+      <Link to="/" className="d-flex justify-content-center">
+        <h1 className="text-center mt-5">DevCorner</h1>
+      </Link>
       <div className="sign-up-body d-flex align-items-center justify-content-center flex-column mt-2">
         <Card
           className="signup-card mt-4"
