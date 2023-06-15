@@ -6,10 +6,9 @@ import { UserContext } from '../contexts/UserContext';
 
 const Header = () => {
   const { user } = useContext(UserContext);
-  const { cart } = user;
 
-  const cartImageCount = cart.length;
-  const cartTotalPrice = cart.reduce(
+  const cartImageCount = user.cart.length;
+  const cartTotalPrice = user.cart.reduce(
     (total, image) => total + parseFloat(image.price),
     0
   );
@@ -90,7 +89,7 @@ const Header = () => {
                 <div className="cart-container">
                   <Link
                     className="link d-flex align-items-center gap-10 text-white p-1"
-                    to={`${user._id}/cart`}
+                    to={`/cart/${user._id}`}
                   >
                     <BiCart className="fs-1" />
                     <div className="d-flex flex-column">

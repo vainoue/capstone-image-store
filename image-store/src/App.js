@@ -9,7 +9,7 @@ import Contact from './pages/Contact';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import ImageInformation from './pages/ImageInformation';
-import CartPage from './pages/CartPage';
+import Cart from './pages/Cart';
 
 function App() {
   return (
@@ -21,7 +21,7 @@ function App() {
             <Route path="about" element={<About />} />
             <Route path="contact" element={<Contact />} />
             <Route path="image/:imageId" element={<ImageInformation />} />
-            <Route path="/:userId/cart" element={<CartPage />} />
+            <Route path="/cart/:userId" element={<Cart />} />
           </Route>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
