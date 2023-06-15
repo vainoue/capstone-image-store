@@ -7,6 +7,11 @@
   color: var(--color-777777);
 }
 
+.cart-item,
+.cart-item .title {
+  color: var(--color-1c1c1b);
+}
+
 .cart-col-1 {
   width: 15%;
 }
@@ -21,4 +26,8 @@
 
 .cart-col-4 {
   width: 5%;
+}
+
+.title:hover {
+  text-decoration: underline;
 }
