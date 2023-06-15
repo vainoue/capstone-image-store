@@ -31,6 +31,14 @@ export const UserProvider = ({ children }) => {
     console.log(`Adding image`, addedImage);
     console.log(updatedUser);
   };
+
+  const handleDeleteFromCart = (imageId) => {
+    const updatedCart = user.cart.filter((image) => image._id !== imageId);
+    const updatedUser = { ...user, cart: updatedCart };
+
+    setUser(updatedUser);
+  };
+
   const handleToggleLike = (imageId) => {
     const isLiked = user.like.some((image) => image._id === imageId);
 
@@ -53,7 +61,13 @@ export const UserProvider = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ user, setUser, handleAddToCart, handleToggleLike }}
+      value={{
+        user,
+        setUser,
+        handleAddToCart,
+        handleToggleLike,
+        handleDeleteFromCart,
+      }}
     >
       {children}
     </UserContext.Provider>

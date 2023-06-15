@@ -2,10 +2,10 @@ import React, { useContext } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { UserContext } from '../contexts/UserContext';
 import '../styles/Cart.css';
-import { AiFillDelete } from 'react-icons/ai';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Link } from 'react-router-dom';
 const Cart = () => {
-  const { user } = useContext(UserContext);
+  const { user, handleDeleteFromCart } = useContext(UserContext);
 
   const cartTotalPrice = user.cart.reduce(
     (total, image) => total + parseFloat(image.price),
@@ -30,20 +30,27 @@ const Cart = () => {
               {user.cart.map((image) => (
                 <div className="cart-item d-flex justify-content-between align-items-center py-3 mb-2">
                   <div className="cart-col-1 d-flex align-items-center">
-                    <img
-                      src={image.imageSrc}
-                      alt={image.title}
-                      className="img-fluid"
-                    />
+                    <Link to={`/image/${image._id}`}>
+                      <img
+                        src={image.imageSrc}
+                        alt={image.title}
+                        className="img-fluid"
+                      />
+                    </Link>
                   </div>
                   <div className="cart-col-2">
-                    <h5 className="title">{image.title}</h5>
+                    <Link to={`/image/${image._id}`}>
+                      <h5 className="title">{image.title}</h5>
+                    </Link>
                   </div>
                   <div className="cart-col-3">
                     <h5 className="price">${image.price}</h5>
                   </div>
                   <div className="cart-col-4">
-                    <AiFillDelete />
+                    <DeleteIcon
+                      onClick={() => handleDeleteFromCart(image._id)}
+                      style={{ cursor: 'pointer' }}
+                    />
                   </div>
                 </div>
               ))}
