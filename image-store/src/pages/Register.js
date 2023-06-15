@@ -26,6 +26,9 @@ const Register = () => {
         'Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special symbol'),
     phone: Yup.string()
       .matches(/^[0-9\- ]{10}$/, 'Phone number must contain 10 digits'),
+      confirmPassword: Yup.string()
+      .required('Re-enter password')
+      .oneOf([Yup.ref("password")], "Passwords are not the same"),
   })
 
   const [firstName, setFirstName] = useState()
@@ -53,6 +56,9 @@ const Register = () => {
       address: e.address,
       password: e.password,
       role: "user",
+      cart: [],
+      likes: [],
+      transaction: [],
     });
 
     navigate('/');
@@ -184,6 +190,21 @@ const Register = () => {
                   />
                   <ErrorMessage
                     name="password"
+                    component="div"
+                    className="error"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="confirmPassword" className="mt-3">Confirm password:</label>
+                  <Field
+                    type="password"
+                    name="confirmPassword"
+                    id="confirmPassword"
+                    placeholder="Enter your password"
+                    className="signup-field"
+                  />
+                  <ErrorMessage
+                    name="confirmPassword"
                     component="div"
                     className="error"
                   />
