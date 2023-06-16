@@ -10,6 +10,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import ImageInformation from './pages/ImageInformation';
 import Cart from './pages/Cart';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="contact" element={<Contact />} />
             <Route path="image/:imageId" element={<ImageInformation />} />
             <Route path="/cart/:userId" element={<Cart />} />
+            <Route path="profile/:userId" element={<Profile />} />
           </Route>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
