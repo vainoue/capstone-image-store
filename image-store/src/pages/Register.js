@@ -8,11 +8,13 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Button, Card, CardContent, CardHeader } from '@mui/material';
 import * as Yup from 'yup';
 import { Helmet } from 'react-helmet-async';
+import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 
 
 const Register = () => {
 
   const [error, setError] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
   const validationSchema = Yup.object({
@@ -26,7 +28,7 @@ const Register = () => {
         'Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special symbol'),
     phone: Yup.string()
       .matches(/^[0-9\- ]{10}$/, 'Phone number must contain 10 digits'),
-      confirmPassword: Yup.string()
+    confirmPassword: Yup.string()
       .required('Re-enter password')
       .oneOf([Yup.ref("password")], "Passwords are not the same"),
   })
@@ -63,6 +65,10 @@ const Register = () => {
 
     navigate('/');
 
+  };
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
   };
 
   return (
@@ -181,13 +187,26 @@ const Register = () => {
                 </div>
                 <div>
                   <label htmlFor="password" className="mt-3">Password:</label>
-                  <Field
-                    type="password"
-                    name="password"
-                    id="password"
-                    placeholder="Enter your password"
-                    className="signup-field"
-                  />
+                  <div className="password-field">
+                    <Field
+                      type={passwordVisible ? 'text' : 'password'}
+                      name="password"
+                      id="password"
+                      placeholder="Enter your password"
+                      className="signup-field"
+                    />
+                    {passwordVisible ? (
+                      <AiOutlineEye
+                        className="password-icon"
+                        onClick={togglePasswordVisibility}
+                      />
+                    ) : (
+                      <AiOutlineEyeInvisible
+                        className="password-icon"
+                        onClick={togglePasswordVisibility}
+                      />
+                    )}
+                  </div>
                   <ErrorMessage
                     name="password"
                     component="div"
@@ -196,13 +215,26 @@ const Register = () => {
                 </div>
                 <div>
                   <label htmlFor="confirmPassword" className="mt-3">Confirm password:</label>
-                  <Field
-                    type="password"
-                    name="confirmPassword"
-                    id="confirmPassword"
-                    placeholder="Enter your password"
-                    className="signup-field"
-                  />
+                  <div className="password-field">
+                    <Field
+                      type={passwordVisible ? 'text' : 'password'}
+                      name="confirmPassword"
+                      id="confirmPassword"
+                      placeholder="Enter your password"
+                      className="signup-field"
+                    />
+                    {passwordVisible ? (
+                      <AiOutlineEye
+                        className="password-icon"
+                        onClick={togglePasswordVisibility}
+                      />
+                    ) : (
+                      <AiOutlineEyeInvisible
+                        className="password-icon"
+                        onClick={togglePasswordVisibility}
+                      />
+                    )}
+                  </div>
                   <ErrorMessage
                     name="confirmPassword"
                     component="div"
