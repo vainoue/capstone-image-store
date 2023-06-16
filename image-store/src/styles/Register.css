@@ -40,3 +40,15 @@
     font-size: 12px;
     margin-top: 4px;
 }
+
+.password-field {
+    position: relative;
+}
+
+.password-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
