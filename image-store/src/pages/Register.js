@@ -257,6 +257,9 @@ const Register = () => {
             </Formik>
           </CardContent>
         </Card>
+        <br />
+        <br />
+        <br />
       </div >
     </>
   );
