@@ -50,14 +50,15 @@ const Register = () => {
       password);
 
     await axiosSet.post("/api/user", {
-      userId: 987654321,
+      //userId: 987654321,
       email: e.email,
       firstName: e.firstName,
       lastName: e.lastName,
       phone: e.phone,
       address: e.address,
       password: e.password,
-      role: "user",
+      role: ["user"],
+      status: "active",
       cart: [],
       likes: [],
       transaction: [],
