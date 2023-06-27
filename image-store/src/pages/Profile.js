@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import '../styles/Profile.css';
 import { Helmet } from "react-helmet-async";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,10 +7,12 @@ import * as Yup from 'yup';
 import axiosSet from "../axiosConfig";
 import { Button, Card, CardContent } from "@mui/material";
 import { useState } from 'react';
+import { UserContext } from "../contexts/UserContext";
 
 const Profile = () => {
 
     //get the userId from URL
+    const { user } = useContext(UserContext);
     const { userId } = useParams();
     console.log(userId);
 
@@ -52,12 +54,12 @@ const Profile = () => {
                         {error && <p className="error">{error}</p>}
                         <Formik
                             initialValues={{
-                                firstName: "FName",
-                                lastName: "LName",
-                                email: "user@email",
-                                phone: "000000",
-                                address: "user address",
-                                userId: "333333",
+                                firstName: user.firstName,
+                                lastName: user.lastName,
+                                email: user.email,
+                                phone: user.phone,
+                                address: user.address,
+                                userId: user.userId,
                             }}
                             validationSchema={validationSchema}
                             onSubmit={updateUser}
