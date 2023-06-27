@@ -17,9 +17,6 @@ const ImageCardsPagination = ({ images, imagesPerPage }) => {
   return (
     <>
       <div className="row">
-        <div className="col-12">
-          <h3 className="section-heading">Image Collection</h3>
-        </div>
         {currentItems.map((image) => (
           <ImageCard key={image._id} image={image} />
         ))}

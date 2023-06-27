@@ -12,8 +12,13 @@ const Home = () => {
       <Helmet>
         <title>Home</title>
       </Helmet>
-      <section className="home-wrapper-1 py-4">
+      <section className="home-wrapper py-4">
         <div className="container-xxl">
+          <div className="row">
+            <div className="col-12">
+              <h3 className="section-heading">Image Collection</h3>
+            </div>
+          </div>
           <ImageCardsPagination images={images} imagesPerPage={24} />
         </div>
       </section>
