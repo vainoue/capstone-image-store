@@ -64,12 +64,15 @@ const Header = () => {
             <div className="col-4">
               <div className="header-upper-links d-flex align-items-center justify-content-between">
                 <div>
-                  <Link className="link d-flex align-items-center gap-10 text-white p-1">
+                  <Link
+                    className="link d-flex align-items-center gap-10 text-white p-1"
+                    to={`/liked/${user._id}`}
+                  >
                     <BiLike className="fs-1" />
                     <p className="mb-0">
-                      Like
+                      Liked
                       <br />
-                      Wishlist
+                      Images
                     </p>
                   </Link>
                 </div>
