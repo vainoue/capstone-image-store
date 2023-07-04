@@ -12,6 +12,7 @@ import ImageInformation from './pages/ImageInformation';
 import Cart from './pages/Cart';
 import Profile from './pages/Profile';
 import CheckoutForm from './pages/CheckoutForm';
+import ImageUpload from './pages/ImageUpload';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import LikedImage from './pages/LikedImage';
@@ -57,6 +58,7 @@ function App() {
             <Route path="liked/:userId" element={<LikedImage />} />
             <Route path="cart/:userId" element={<Cart />} />
             <Route path="profile/:userId" element={<Profile />} />
+            <Route path="image/imageUpload" element={<ImageUpload />} />
             <Route
               path="cart/:userId/checkout"
               element={
