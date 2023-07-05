@@ -107,7 +107,8 @@ const ImageUpload = () => {
                                         name="description"
                                         id="description"
                                         placeholder="Enter description"
-                                        className="imageUpload-field"
+                                        rows="6"
+                                        className="textArea-field"
                                     />
                                     <ErrorMessage
                                         name="description"
