@@ -74,6 +74,13 @@ const ImageUpload = () => {
                     <CardContent className="imageUpload-card-content">
                         {error && <p className="error">{error}</p>}
                         <Formik
+                            initialValues={{
+                                title:'',
+                                description:'',
+                                tags:'',
+                                price:'',
+                                imageFile:'',
+                            }}
                             validationSchema={validationSchema}
                             onSubmit={imageUpload}
                         >
