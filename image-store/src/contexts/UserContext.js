@@ -37,7 +37,7 @@ export const UserProvider = ({ children }) => {
         }
       } else {
         // User is signed out, reset the user state
-        setUser(initialUser);
+        setUser(null);
       }
 
       setIsLoading(false);

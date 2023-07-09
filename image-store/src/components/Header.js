@@ -107,7 +107,7 @@ const Header = () => {
       <header className="header-bottom py-3">
         <div className="container-xxl">
           <div className="row">
-            <div className="col-11">
+            <div className="col-2">
               <div className="menu-bottom d-flex align-items-center gap-30">
                 <div>
                   <div className="dropdown">
@@ -169,6 +169,15 @@ const Header = () => {
                   </div>
                 </div> */}
               </div>
+            </div>
+            <div className="col-9">
+              {userInfo.role === 'admin' && (
+                <div>
+                  <NavLink to="/image/imageUpload" className="text-white mb-0">
+                    Image Management
+                  </NavLink>
+                </div>
+              )}
             </div>
             <div className="col-1">
               {user != null && (
