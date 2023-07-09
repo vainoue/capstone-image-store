@@ -6,6 +6,7 @@ mongo-db-data
 credentials.json
 /.pnp
 .pnp.js
+.env
 
 # testing
 /coverage
