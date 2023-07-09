@@ -5,8 +5,8 @@ import ImageCardsPagination from '../components/ImageCardsPagination';
 import { Link } from 'react-router-dom';
 
 const LikedImage = () => {
-  const { user } = useContext(UserContext);
-  const isEmpty = user.cart.length === 0;
+  const { user, userInfo } = useContext(UserContext);
+  const isEmpty = userInfo.like.length === 0;
 
   return (
     <>
@@ -22,7 +22,7 @@ const LikedImage = () => {
                   <h3 className="section-heading">Your Liked Images</h3>
                 </div>
               </div>
-              <ImageCardsPagination images={user.like} imagesPerPage={24} />
+              <ImageCardsPagination images={userInfo.like} imagesPerPage={24} />
             </>
           )}
           {isEmpty && (

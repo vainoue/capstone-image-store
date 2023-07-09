@@ -1,20 +1,19 @@
-import React from 'react';
-import '../styles/Register.css';
-import { Link, NavLink } from 'react-router-dom';
-import axiosSet from '../axiosConfig';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Button, Card, CardContent, CardHeader } from '@mui/material';
 import * as Yup from 'yup';
+import axios from 'axios';
 import { Helmet } from 'react-helmet-async';
 import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 
+import '../styles/Register.css';
 
 const Register = () => {
-
   const [error, setError] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmedPasswordVisible, setConfirmedPasswordVisible] =
+    useState(false);
   const navigate = useNavigate();
 
   const validationSchema = Yup.object({
@@ -24,52 +23,54 @@ const Register = () => {
     password: Yup.string()
       .required('Password is required')
       .min(8, 'Password must be at least 8 characters')
-      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]+$/,
-        'Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special symbol'),
-    phone: Yup.string()
-      .matches(/^[0-9\- ]{10}$/, 'Phone number must contain 10 digits'),
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]+$/,
+        'Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special symbol'
+      ),
     confirmPassword: Yup.string()
       .required('Re-enter password')
-      .oneOf([Yup.ref("password")], "Passwords are not the same"),
-  })
+      .oneOf([Yup.ref('password')], 'Passwords are not the same'),
+    firstName: Yup.string().required('First name is required'),
+    lastName: Yup.string().required('Last name is required'),
+    phone: Yup.string().matches(
+      /^[0-9\- ]{10}$/,
+      'Phone number must contain 10 digits'
+    ),
+    address: Yup.string().required('Address is required'),
+  });
 
-  const [firstName, setFirstName] = useState()
-  const [lastName, setLastName] = useState()
-  const [email, setEmail] = useState()
-  const [phone, setPhone] = useState()
-  const [address, setAddress] = useState()
-  const [password, setPassword] = useState()
+  const signUp = async (values) => {
+    try {
+      if (values.password !== values.confirmPassword) {
+        setError('Password and Confirmed password do not match');
+        return;
+      }
 
-  const signUp = async (e) => {
+      const userData = {
+        email: values.email,
+        password: values.password,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        phone: values.phone,
+        address: values.address,
+      };
 
-    console.log(email,
-      firstName,
-      lastName,
-      phone,
-      address,
-      password);
+      await axios.post('/api/register', userData);
 
-    await axiosSet.post("/api/user", {
-      //userId: 987654321,
-      email: e.email,
-      firstName: e.firstName,
-      lastName: e.lastName,
-      phone: e.phone,
-      address: e.address,
-      password: e.password,
-      role: ["user"],
-      status: "active",
-      cart: [],
-      likes: [],
-      transaction: [],
-    });
-
-    navigate('/');
-
+      //Successful registration, navigate to login route
+      navigate('/login');
+    } catch (error) {
+      // Handle error if registration fails
+      setError(error.message);
+    }
   };
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
+  };
+
+  const toggleConfirmedPasswordVisibility = () => {
+    setConfirmedPasswordVisible(!confirmedPasswordVisible);
   };
 
   return (
@@ -82,10 +83,10 @@ const Register = () => {
       </Link>
       <div className="sign-up-body d-flex align-items-center justify-content-center flex-column mt-2">
         <Card
-          className="signup-card mt-4"
+          className="signup-card mt-4 mb-4"
           variant="outlined"
           sx={{
-            width: 300,
+            width: 600,
             padding: 1,
           }}
         >
@@ -100,49 +101,22 @@ const Register = () => {
             {error && <p className="error">{error}</p>}
             <Formik
               initialValues={{
+                email: '',
+                password: '',
+                confirmPassword: '',
                 firstName: '',
                 lastName: '',
-                email: '',
                 phone: '',
                 address: '',
-                password: '',
               }}
               validationSchema={validationSchema}
               onSubmit={signUp}
             >
               <Form>
                 <div>
-                  <label htmlFor="firstName" className="mt-3">First name:</label>
-                  <Field
-                    type="text"
-                    name="firstName"
-                    id="firstName"
-                    placeholder="Insert your first name"
-                    className="signup-field"
-                  />
-                  <ErrorMessage
-                    name="firstName"
-                    component="div"
-                    className="error"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="lastName" className="mt-3">Last name:</label>
-                  <Field
-                    type="text"
-                    name="lastName"
-                    id="lastName"
-                    placeholder="Insert your last name"
-                    className="signup-field"
-                  />
-                  <ErrorMessage
-                    name="lastname"
-                    component="div"
-                    className="error"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="mt-3">Email:</label>
+                  <label htmlFor="email" className="mt-3">
+                    Email:
+                  </label>
                   <Field
                     type="text"
                     name="email"
@@ -157,37 +131,9 @@ const Register = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="phone" className="mt-3">Phone:</label>
-                  <Field
-                    type="tel"
-                    name="phone"
-                    id="phone"
-                    placeholder="1234567890"
-                    className="signup-field"
-                  />
-                  <ErrorMessage
-                    name="phone"
-                    component="div"
-                    className="error"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="address" className="mt-3">Address:</label>
-                  <Field
-                    type="text"
-                    name="address"
-                    id="address"
-                    placeholder="Insert your address"
-                    className="signup-field"
-                  />
-                  <ErrorMessage
-                    name="address"
-                    component="div"
-                    className="error"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="password" className="mt-3">Password:</label>
+                  <label htmlFor="password" className="mt-3">
+                    Password:
+                  </label>
                   <div className="password-field">
                     <Field
                       type={passwordVisible ? 'text' : 'password'}
@@ -215,24 +161,26 @@ const Register = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="confirmPassword" className="mt-3">Confirm password:</label>
+                  <label htmlFor="confirmPassword" className="mt-3">
+                    Confirm Password:
+                  </label>
                   <div className="password-field">
                     <Field
-                      type={passwordVisible ? 'text' : 'password'}
+                      type={confirmedPasswordVisible ? 'text' : 'password'}
                       name="confirmPassword"
                       id="confirmPassword"
-                      placeholder="Enter your password"
+                      placeholder="Re-enter your password"
                       className="signup-field"
                     />
-                    {passwordVisible ? (
+                    {confirmedPasswordVisible ? (
                       <AiOutlineEye
                         className="password-icon"
-                        onClick={togglePasswordVisibility}
+                        onClick={toggleConfirmedPasswordVisibility}
                       />
                     ) : (
                       <AiOutlineEyeInvisible
                         className="password-icon"
-                        onClick={togglePasswordVisibility}
+                        onClick={toggleConfirmedPasswordVisibility}
                       />
                     )}
                   </div>
@@ -242,26 +190,107 @@ const Register = () => {
                     className="error"
                   />
                 </div>
+                <div>
+                  <label htmlFor="firstName" className="mt-3">
+                    First name:
+                  </label>
+                  <Field
+                    type="text"
+                    name="firstName"
+                    id="firstName"
+                    placeholder="Insert your first name"
+                    className="signup-field"
+                  />
+                  <ErrorMessage
+                    name="firstName"
+                    component="div"
+                    className="error"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="lastName" className="mt-3">
+                    Last name:
+                  </label>
+                  <Field
+                    type="text"
+                    name="lastName"
+                    id="lastName"
+                    placeholder="Insert your last name"
+                    className="signup-field"
+                  />
+                  <ErrorMessage
+                    name="lastName"
+                    component="div"
+                    className="error"
+                  />
+                </div>
 
                 <div>
+                  <label htmlFor="phone" className="mt-3">
+                    Phone:
+                  </label>
+                  <Field
+                    type="tel"
+                    name="phone"
+                    id="phone"
+                    placeholder="1234567890"
+                    className="signup-field"
+                  />
+                  <ErrorMessage
+                    name="phone"
+                    component="div"
+                    className="error"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="address" className="mt-3">
+                    Address:
+                  </label>
+                  <Field
+                    type="text"
+                    name="address"
+                    id="address"
+                    placeholder="Insert your address"
+                    className="signup-field"
+                  />
+                  <ErrorMessage
+                    name="address"
+                    component="div"
+                    className="error"
+                  />
+                </div>
+
+                <div className="d-flex flex-column align-items-center">
                   <Button
                     type="submit"
                     className="mt-3"
                     color="primary"
                     variant="contained"
                   >
-                    Confirm Registration
+                    Sign up
                   </Button>
-                  <NavLink to="/login" className="mt-3">Already have an account? Sign in!</NavLink>
+                  <div className="mt-3">
+                    <NavLink to="/login">
+                      Already have an account? Sign in!
+                    </NavLink>
+                  </div>
                 </div>
               </Form>
             </Formik>
           </CardContent>
         </Card>
-        <br />
-        <br />
-        <br />
-      </div >
+        <footer className="py-4 fixed-bottom">
+          <div className="container-xxl">
+            <div className="row">
+              <div className="col-12">
+                <p className="text-center mb-0 text-white">
+                  &copy; {new Date().getFullYear()}; Developer's Corner
+                </p>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
     </>
   );
 };

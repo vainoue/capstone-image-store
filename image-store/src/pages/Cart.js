@@ -6,10 +6,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Link, useParams } from 'react-router-dom';
 
 const Cart = () => {
-  const { user, handleDeleteFromCart } = useContext(UserContext);
-  const isEmpty = user.cart.length === 0;
+  const { user, userInfo, handleDeleteFromCart } = useContext(UserContext);
+  const isEmpty = userInfo.cart.length === 0;
 
-  const cartTotalPrice = user.cart.reduce(
+  const cartTotalPrice = userInfo.cart.reduce(
     (total, image) => total + parseFloat(image.price),
     0
   );
@@ -30,7 +30,7 @@ const Cart = () => {
                   <h4 className="cart-col-3">Price</h4>
                   <h4 className="cart-col-4">Delete</h4>
                 </div>
-                {user.cart.map((image) => (
+                {userInfo.cart.map((image) => (
                   <div className="cart-item d-flex justify-content-between align-items-center py-3 mb-2">
                     <div className="cart-col-1 d-flex align-items-center">
                       <Link to={`/image/${image._id}`}>
@@ -65,10 +65,7 @@ const Cart = () => {
                     <div className="d-flex flex-column align-items-end">
                       <h4>{`SubTotal: $${cartTotalPrice}`}</h4>
                       <p>Taxes and shipping cakculated at checkout</p>
-                      <Link
-                        className="button"
-                        to={`/cart/${user._id}/checkout`}
-                      >
+                      <Link className="button" to={`/cart/checkout`}>
                         Checkout
                       </Link>
                     </div>

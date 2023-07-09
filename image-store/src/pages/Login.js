@@ -3,9 +3,8 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Button, Card, CardContent, CardHeader } from '@mui/material';
 import * as Yup from 'yup';
-import axiosSet from '../axiosConfig';
 import { Helmet } from 'react-helmet-async';
-// import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 
 import '../styles/Login.css';
@@ -25,16 +24,14 @@ const Login = () => {
 
   const signIn = async (values) => {
     try {
-      const post = { email: values.email, password: values.password };
-      await axiosSet.post('/url', {
-        body: post,
-      });
-
-      //   //Implement firebase auth
-      //   await signInWithEmailAndPassword(getAuth(), values.email, values.password);
-
+      //Implement firebase auth
+      await signInWithEmailAndPassword(
+        getAuth(),
+        values.email,
+        values.password
+      );
       // Successful login, navigate to another route
-      navigate('/home');
+      navigate('/');
     } catch (error) {
       // Handle error if login fails
       setError(error.message);

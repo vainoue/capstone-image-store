@@ -2,6 +2,8 @@
 
 # dependencies
 node_modules
+mongo-db-data
+credentials.json
 /.pnp
 .pnp.js
 

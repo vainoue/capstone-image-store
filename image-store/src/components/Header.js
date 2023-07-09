@@ -5,10 +5,10 @@ import '../styles/Header.css';
 import { UserContext } from '../contexts/UserContext';
 
 const Header = () => {
-  const { user } = useContext(UserContext);
+  const { user, userInfo, handleSignOut } = useContext(UserContext);
 
-  const cartImageCount = user.cart.length;
-  const cartTotalPrice = user.cart.reduce(
+  const cartImageCount = userInfo.cart.length;
+  const cartTotalPrice = userInfo.cart.reduce(
     (total, image) => total + parseFloat(image.price),
     0
   );
@@ -66,7 +66,7 @@ const Header = () => {
                 <div>
                   <Link
                     className="link d-flex align-items-center gap-10 text-white p-1"
-                    to={`/liked/${user._id}`}
+                    to={`/liked`}
                   >
                     <BiLike className="fs-1" />
                     <p className="mb-0">
@@ -79,20 +79,16 @@ const Header = () => {
                 <div>
                   <Link
                     className="link d-flex align-items-center gap-10 text-white p-1"
-                    to="/login"
+                    to={user ? '/profile' : '/login'}
                   >
                     <BiUser className="fs-1" />
-                    <p className="mb-0">
-                      Log in
-                      <br />
-                      My Account
-                    </p>
+                    <p className="mb-0">{user ? 'My Account' : 'Sign In'}</p>
                   </Link>
                 </div>
                 <div className="cart-container">
                   <Link
                     className="link d-flex align-items-center gap-10 text-white p-1"
-                    to={`/cart/${user._id}`}
+                    to={`/cart`}
                   >
                     <BiCart className="fs-1" />
                     <div className="d-flex flex-column">
@@ -111,7 +107,7 @@ const Header = () => {
       <header className="header-bottom py-3">
         <div className="container-xxl">
           <div className="row">
-            <div className="col-12">
+            <div className="col-11">
               <div className="menu-bottom d-flex align-items-center gap-30">
                 <div>
                   <div className="dropdown">
@@ -173,6 +169,19 @@ const Header = () => {
                   </div>
                 </div> */}
               </div>
+            </div>
+            <div className="col-1">
+              {user != null && (
+                <div>
+                  <NavLink
+                    to="/"
+                    className="text-end text-white mb-0"
+                    onClick={() => handleSignOut()}
+                  >
+                    Sign out
+                  </NavLink>
+                </div>
+              )}
             </div>
           </div>
         </div>

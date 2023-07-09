@@ -55,12 +55,12 @@ function App() {
             <Route path="about" element={<About />} />
             <Route path="contact" element={<Contact />} />
             <Route path="image/:imageId" element={<ImageInformation />} />
-            <Route path="liked/:userId" element={<LikedImage />} />
-            <Route path="cart/:userId" element={<Cart />} />
-            <Route path="profile/:userId" element={<Profile />} />
+            <Route path="liked" element={<LikedImage />} />
+            <Route path="cart" element={<Cart />} />
+            <Route path="profile" element={<Profile />} />
             <Route path="image/imageUpload" element={<ImageUpload />} />
             <Route
-              path="cart/:userId/checkout"
+              path="cart/checkout"
               element={
                 <Elements options={options} stripe={stripePromise}>
                   <CheckoutForm />
