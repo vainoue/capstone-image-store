@@ -1,7 +1,8 @@
 import fs from 'fs';
 import admin from 'firebase-admin';
 import express from 'express';
-import { MongoClient } from 'mongodb';
+import 'dotenv/config';
+import { db, connectToDb } from './db.js';
 
 // initialize firebase
 const credentials = JSON.parse(fs.readFileSync('./credentials.json'));
@@ -11,11 +12,6 @@ admin.initializeApp({
 
 const app = express();
 app.use(express.json());
-
-const client = new MongoClient('mongodb://127.0.0.1:27017');
-await client.connect();
-
-const db = client.db('image-store-db');
 
 // Define a route for handling user registration
 app.post('/api/register', async (req, res) => {
@@ -81,6 +77,9 @@ app.get('/api/user/:uid', async (req, res) => {
   }
 });
 
-app.listen(8000, () => {
-  console.log('Server is listening on port 8000');
+connectToDb(() => {
+  console.log('Successfully Connect to Database');
+  app.listen(8000, () => {
+    console.log('Server is listening on port 8000');
+  });
 });
