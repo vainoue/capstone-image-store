@@ -15,7 +15,8 @@ const CartButton = styled(Button)(({ theme, disabled }) => ({
 }));
 
 const ImageCard = ({ image }) => {
-  const { user, handleAddToCart, handleToggleLike } = useContext(UserContext);
+  const { userInfo, handleAddToCart, handleToggleLike } =
+    useContext(UserContext);
 
   const [isHovered, setIsHovered] = useState(false);
 
@@ -27,8 +28,12 @@ const ImageCard = ({ image }) => {
     setIsHovered(false);
   };
 
-  const isLiked = user.like.some((likedImage) => likedImage._id === image._id);
-  const isInCart = user.cart.some((cartImage) => cartImage._id === image._id);
+  const isLiked = userInfo.like.some(
+    (likedImage) => likedImage._id === image._id
+  );
+  const isInCart = userInfo.cart.some(
+    (cartImage) => cartImage._id === image._id
+  );
 
   return (
     <>
