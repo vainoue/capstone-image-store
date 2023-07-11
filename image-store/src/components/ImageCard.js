@@ -28,7 +28,7 @@ const ImageCard = ({ image }) => {
     setIsHovered(false);
   };
 
-  const isLiked = userInfo.like.some(
+  const isLiked = userInfo.likes.some(
     (likedImage) => likedImage._id === image._id
   );
   const isInCart = userInfo.cart.some(

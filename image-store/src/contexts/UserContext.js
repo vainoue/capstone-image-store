@@ -4,6 +4,7 @@ import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import axios from 'axios';
 
 const initialUser = {
+  uid: '',
   email: '',
   firstName: '',
   lastName: '',
@@ -11,7 +12,7 @@ const initialUser = {
   address: '',
   role: 'user',
   cart: [],
-  like: [],
+  likes: [],
   transaction: [],
 };
 
@@ -29,9 +30,11 @@ export const UserProvider = ({ children }) => {
       if (user) {
         // User is signed in, load data from the server
         try {
-          const response = await axios.get(`/api/user/${user.uid}`);
+          console.log(user.uid);
+          const response = await axios.get(`/user/${user.uid}`);
           setUser(user);
           setUserInfo(response.data);
+          console.log("Test context. User email:" + user.email)
         } catch (error) {
           console.log('Error loading user data:', error);
         }
@@ -88,14 +91,14 @@ export const UserProvider = ({ children }) => {
   };
 
   const handleToggleLike = (imageId) => {
-    const isLiked = userInfo.like.some((image) => image._id === imageId);
+    const isLiked = userInfo.likes.some((image) => image._id === imageId);
 
     if (isLiked) {
       // Image is already liked, remove it from user's liked images
-      const updatedLikes = userInfo.like.filter(
+      const updatedLikes = userInfo.likes.filter(
         (image) => image._id !== imageId
       );
-      const updatedUserInfo = { ...userInfo, like: updatedLikes };
+      const updatedUserInfo = { ...userInfo, likes: updatedLikes };
       setUserInfo(updatedUserInfo);
       console.log(`Removed image ${imageId} from liked images`);
       console.log(updatedUserInfo);
@@ -104,7 +107,7 @@ export const UserProvider = ({ children }) => {
       const addedImage = images.find((image) => image._id === imageId);
       const updatedUserInfo = {
         ...userInfo,
-        like: [...userInfo.like, addedImage],
+        likes: [...userInfo.likes, addedImage],
       };
       setUserInfo(updatedUserInfo);
       console.log(`Added image`, addedImage);

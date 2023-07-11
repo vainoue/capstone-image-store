@@ -8,7 +8,7 @@ import { getAuth, signInWithEmailAndPassword, AuthErrorCodes } from 'firebase/au
 import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 
 import '../styles/Login.css';
-import axiosSet from '../axiosConfig';
+import axios from 'axios';
 
 const Login = () => {
   const [error, setError] = useState('');
@@ -31,7 +31,7 @@ const Login = () => {
         values.email,
         values.password
       );
-      const userData = await axiosSet.get(`user/${values.email}`).then(res => res.data);
+      const userData = await axios.get(`user/${values.email}`).then(res => res.data);
       console.log(userData);
             
       // Successful login, navigate to another route
