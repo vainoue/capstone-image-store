@@ -11,3 +11,10 @@
   text-align: justify;
   text-justify: inter-word;
 }
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}

@@ -63,11 +63,7 @@ const ImageCard = ({ image }) => {
                 </>
               )}
             </div>
-            <Link
-              to={`/image/${image._id}`}
-              state={{ image: image }}
-              onClick={() => console.log(image)}
-            >
+            <Link to={`/image/${image._id}`} state={{ image: image }}>
               <div className="product-image">
                 <img src={image.imageLocation} alt={image.title} />
               </div>

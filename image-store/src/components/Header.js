@@ -13,7 +13,9 @@ const Header = () => {
 
   const cartImageCount = userInfo ? userInfo.cart.length : 0;
   const cartTotalPrice = userInfo
-    ? userInfo.cart.reduce((total, image) => total + parseFloat(image.price), 0)
+    ? userInfo.cart
+        .reduce((total, image) => total + parseFloat(image.price), 0)
+        .toFixed(1)
     : 0;
 
   return (
