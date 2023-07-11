@@ -15,8 +15,11 @@ const CartButton = styled(Button)(({ theme, disabled }) => ({
 }));
 
 const ImageCard = ({ image }) => {
-  const { userInfo, handleAddToCart, handleToggleLike } =
-    useContext(UserContext);
+  const { user, handleAddToCart, handleToggleLike } = useContext(UserContext);
+
+  const userInfo = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))
+    : null;
 
   const [isHovered, setIsHovered] = useState(false);
 
@@ -28,12 +31,11 @@ const ImageCard = ({ image }) => {
     setIsHovered(false);
   };
 
-  const isLiked = userInfo.likes.some(
-    (likedImage) => likedImage._id === image._id
-  );
-  const isInCart = userInfo.cart.some(
-    (cartImage) => cartImage._id === image._id
-  );
+  const isLiked =
+    userInfo &&
+    userInfo.likes.some((likedImage) => likedImage._id === image._id);
+  const isInCart =
+    userInfo && userInfo.cart.some((cartImage) => cartImage._id === image._id);
 
   return (
     <>
@@ -45,18 +47,21 @@ const ImageCard = ({ image }) => {
         >
           <div className="image-card position-relative">
             <div className="like-icon position-absolute">
-              {isHovered &&
-                (isLiked ? (
-                  <BsSuitHeartFill
-                    className="fs-2"
-                    onClick={() => handleToggleLike(image._id)}
-                  />
-                ) : (
-                  <BsSuitHeart
-                    className="fs-2"
-                    onClick={() => handleToggleLike(image._id)}
-                  />
-                ))}
+              {user && isHovered && (
+                <>
+                  {isLiked ? (
+                    <BsSuitHeartFill
+                      className="fs-2"
+                      onClick={() => handleToggleLike(image._id)}
+                    />
+                  ) : (
+                    <BsSuitHeart
+                      className="fs-2"
+                      onClick={() => handleToggleLike(image._id)}
+                    />
+                  )}
+                </>
+              )}
             </div>
             <Link to={`/image/${image._id}`}>
               <div className="product-image">

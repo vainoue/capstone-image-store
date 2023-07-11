@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 const LikedImage = () => {
   const { user, userInfo } = useContext(UserContext);
-  const isEmpty = userInfo.like.length === 0;
+  const isEmpty = userInfo.likes.length === 0;
 
   return (
     <>
@@ -22,7 +22,10 @@ const LikedImage = () => {
                   <h3 className="section-heading">Your Liked Images</h3>
                 </div>
               </div>
-              <ImageCardsPagination images={userInfo.like} imagesPerPage={24} />
+              <ImageCardsPagination
+                images={userInfo.likes}
+                imagesPerPage={24}
+              />
             </>
           )}
           {isEmpty && (

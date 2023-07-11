@@ -5,13 +5,16 @@ import '../styles/Header.css';
 import { UserContext } from '../contexts/UserContext';
 
 const Header = () => {
-  const { user, userInfo, handleSignOut } = useContext(UserContext);
+  const { user, handleSignOut } = useContext(UserContext);
 
-  const cartImageCount = userInfo.cart.length;
-  const cartTotalPrice = userInfo.cart.reduce(
-    (total, image) => total + parseFloat(image.price),
-    0
-  );
+  const userInfo = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))
+    : null;
+
+  const cartImageCount = userInfo ? userInfo.cart.length : 0;
+  const cartTotalPrice = userInfo
+    ? userInfo.cart.reduce((total, image) => total + parseFloat(image.price), 0)
+    : 0;
 
   return (
     <>
@@ -77,13 +80,51 @@ const Header = () => {
                   </Link>
                 </div>
                 <div>
-                  <Link
-                    className="link d-flex align-items-center gap-10 text-white p-1"
-                    to={user ? '/profile' : '/login'}
-                  >
-                    <BiUser className="fs-1" />
-                    <p className="mb-0">{user ? 'My Account' : 'Sign In'}</p>
-                  </Link>
+                  {user ? (
+                    <div className="dropdown">
+                      <button
+                        className="btn btn-secondary dropdown-toggle bg-transparent border-0 gap-15 d-flex align-items-center"
+                        type="button"
+                        id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <BiUser className="fs-1" />
+                        <p className="mb-0">
+                          {userInfo.firstName} {userInfo.lastName.slice(0, 1)}.
+                        </p>
+                      </button>
+                      <ul
+                        className="dropdown-menu"
+                        aria-labelledby="dropdownMenuButton1"
+                      >
+                        <li>
+                          <Link
+                            className="dropdown-item text-white"
+                            to="/profile"
+                          >
+                            User Profile
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            className="dropdown-item text-white"
+                            to="/order-history"
+                          >
+                            Order History
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
+                  ) : (
+                    <Link
+                      className="link d-flex align-items-center gap-10 text-white p-1"
+                      to="/login"
+                    >
+                      <BiUser className="fs-1" />
+                      <p className="mb-0">Sign In</p>
+                    </Link>
+                  )}
                 </div>
                 <div className="cart-container">
                   <Link
@@ -171,7 +212,7 @@ const Header = () => {
               </div>
             </div>
             <div className="col-9">
-              {userInfo.role === 'admin' && (
+              {userInfo && userInfo.role === 'admin' && (
                 <div>
                   <NavLink to="/image/imageUpload" className="text-white mb-0">
                     Image Management

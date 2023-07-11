@@ -1,4 +1,5 @@
 import './App.css';
+import axiosSet from './axiosConfig';
 import { useState, useEffect, useContext } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
@@ -18,7 +19,9 @@ import LikedImage from './pages/LikedImage';
 
 // Make sure to call loadStripe outside of a component’s render to avoid
 // recreating the Stripe object on every render.
-// This is your test publishable API key.
+// This is a public sample test API key.
+// Don’t submit any personally identifiable information in requests made with this key.
+// Sign in to see your own test API key embedded in code samples.
 const stripePromise = loadStripe(
   'pk_test_51NNV0sK99pLuShav4XQEj9HQ969kexFwql2qttg2Epqyv6e5CdgeaIbajVxEgsAWYxaPEuFNcapdUkfifVnJjohp00JGRjUdbU'
 );
@@ -61,9 +64,11 @@ function App() {
             <Route
               path="cart/checkout"
               element={
-                <Elements options={options} stripe={stripePromise}>
-                  <CheckoutForm />
-                </Elements>
+                clientSecret && (
+                  <Elements options={options} stripe={stripePromise}>
+                    <CheckoutForm />
+                  </Elements>
+                )
               }
             />
           </Route>

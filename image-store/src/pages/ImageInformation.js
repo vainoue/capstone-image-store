@@ -23,8 +23,12 @@ const CartButton = styled(Button)(({ theme, disabled }) => ({
 }));
 
 const ImageInformation = () => {
-  const { userInfo, handleAddToCart, handleToggleLike } =
-    useContext(UserContext);
+  const { user, handleAddToCart, handleToggleLike } = useContext(UserContext);
+
+  const userInfo = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))
+    : null;
+
   const { images } = useContext(ImageContext);
 
   const { imageId } = useParams();
@@ -39,12 +43,11 @@ const ImageInformation = () => {
     },
   });
 
-  const isLiked = userInfo.like.some(
-    (likedImage) => likedImage._id === image._id
-  );
-  const isInCart = userInfo.cart.some(
-    (cartImage) => cartImage._id === image._id
-  );
+  const isLiked =
+    userInfo &&
+    userInfo.likes.some((likedImage) => likedImage._id === image._id);
+  const isInCart =
+    userInfo && userInfo.cart.some((cartImage) => cartImage._id === image._id);
 
   if (!image) {
     return <h1>Image not found</h1>;
@@ -88,17 +91,18 @@ const ImageInformation = () => {
                   <span className="me-1">Price: </span>${image.price}{' '}
                 </p>
                 <div className="like-icon">
-                  {isLiked ? (
-                    <BsSuitHeartFill
-                      className="fs-2"
-                      onClick={() => handleToggleLike(image._id)}
-                    />
-                  ) : (
-                    <BsSuitHeart
-                      className="fs-2"
-                      onClick={() => handleToggleLike(image._id)}
-                    />
-                  )}
+                  {user &&
+                    (isLiked ? (
+                      <BsSuitHeartFill
+                        className="fs-2"
+                        onClick={() => handleToggleLike(image._id)}
+                      />
+                    ) : (
+                      <BsSuitHeart
+                        className="fs-2"
+                        onClick={() => handleToggleLike(image._id)}
+                      />
+                    ))}
                 </div>
               </div>
               <div className="action-bar mt-4">
