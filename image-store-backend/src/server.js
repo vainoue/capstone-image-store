@@ -19,14 +19,41 @@ admin.initializeApp({
 
 const app = express();
 
+// This is a public sample test API key.
+// Don’t submit any personally identifiable information in requests made with this key.
+// Sign in to see your own test API key embedded in code samples.
+const stripe = new Stripe(process.env.STRIPE_S_KEYS);
+
 app.use(express.static('public'));
 app.use(express.json());
 
 // Serve static files from the "images" directory
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
+const calculateOrderAmount = (items) => {
+  // Replace this constant with a calculation of the order's amount
+  // Calculate the order total on the server to prevent
+  // people from directly manipulating the amount on the client
+  return 1400;
+};
+app.post('/create-payment-intent', async (req, res) => {
+  const { items } = req.body;
+  // Create a PaymentIntent with the order amount and currency
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: calculateOrderAmount(items),
+    currency: 'cad',
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  });
+  res.send({
+    clientSecret: paymentIntent.client_secret,
+  });
+});
+
 // Define a route for handling user registration
-app.post('/api/register', async (req, res) => {
+app.post('/api/user/register', async (req, res) => {
+  console.log(req.body);
   try {
     // Create a new Firebase user
     const firebaseUser = await admin.auth().createUser({
@@ -121,19 +148,59 @@ app.get('/api/images', async (req, res) => {
   }
 });
 
-// app.use(async (req, res, next) => {
-//   const { authToken } = req.header;
+app.post('/api/url', async (req, res) => {
+  console.log(req.body);
+});
 
-//   if (authToken) {
-//     try {
-//       req.user = await admin.auth().verifyIdToken(authToken);
-//     } catch (e) {
-//       res.sendStatus(400);
-//     }
-//   }
+app.use(async (req, res, next) => {
+  const { authtoken } = req.headers;
 
-//   next();
-// });
+  if (authtoken) {
+    try {
+      req.user = await admin.auth().verifyIdToken(authtoken);
+    } catch (e) {
+      return res.sendStatus(400);
+    }
+  }
+
+  req.user = req.user || {};
+
+  next();
+});
+
+app.post('/api/user/profile/', async (req, res) => {
+  const { uid } = req.user;
+
+  try {
+    const { email, firstName, lastName, phone, address } = req.body;
+
+    // Update the user document in the MongoDB collection
+    const updatedUser = await db.collection('users').findOneAndUpdate(
+      { uid: uid }, // Filter criteria
+      {
+        $set: {
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          phone: phone,
+          address: address,
+        },
+      },
+      { returnOriginal: false } // Set returnOriginal option to false to get the updated document
+    );
+
+    if (!updatedUser.value) {
+      throw new Error('User not found');
+    }
+
+    console.log(updatedUser.value); // Log the updated user document
+
+    res.sendStatus(200); // Send a successful response
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred while updating the user profile');
+  }
+});
 
 app.get('/api/images/:imageId', async (req, res) => {
   const { imageId } = req.params;

@@ -39,32 +39,57 @@ const Register = () => {
     address: Yup.string().required('Address is required'),
   });
 
+  // const signUp = async (values) => {
+  //   try {
+  //     if (values.password !== values.confirmPassword) {
+  //       setError('Password and Confirmed password do not match');
+  //       return;
+  //     }
+
+  //     const newUser = await createUserWithEmailAndPassword(getAuth(), values.email, values.password);
+  //     console.log(newUser.user.uid);
+
+  //     const userData = {
+  //       uid: newUser.user.uid,
+  //       email: values.email,
+  //       password: values.password,
+  //       firstName: values.firstName,
+  //       lastName: values.lastName,
+  //       phone: values.phone,
+  //       address: values.address,
+  //       role: "user",
+  //       status:"inactive",
+  //       cart: [],
+  //       likes: [],
+  //       transactions: [],
+  //     };
+
+  //     await axios.post('/user', userData);
+
+  //     //Successful registration, navigate to login route
+  //     navigate('/login');
+  //   } catch (error) {
+  //     // Handle error if registration fails
+  //     setError(error.message);
+  //   }
+  // };
+
   const signUp = async (values) => {
     try {
       if (values.password !== values.confirmPassword) {
         setError('Password and Confirmed password do not match');
         return;
       }
-
-      const newUser = await createUserWithEmailAndPassword(getAuth(), values.email, values.password);
-      console.log(newUser.user.uid);
-
       const userData = {
-        uid: newUser.user.uid,
         email: values.email,
         password: values.password,
         firstName: values.firstName,
         lastName: values.lastName,
         phone: values.phone,
         address: values.address,
-        role: "user",
-        status:"inactive",
-        cart: [],
-        likes: [],
-        transactions: [],
       };
 
-      await axios.post('/user', userData);
+      await axios.post('/api/user/register', userData);
 
       //Successful registration, navigate to login route
       navigate('/login');
