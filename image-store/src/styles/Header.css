@@ -24,6 +24,27 @@
   width: 40px; /* Adjust the width according to your design */
 }
 
+.header-upper .btn {
+  border-radius: 0;
+}
+.header-upper .dropdown-menu {
+  background-color: var(--color-131921);
+}
+.header-upper .dropdown button:hover,
+.header-upper .dropdown button:focus {
+  transition-duration: 0s;
+  box-shadow: 0 0 0 0.5px white;
+}
+.header-upper .dropdown-item {
+  padding: 10px;
+  margin-bottom: 0px;
+  border-bottom: 1px solid var(--color-3b4149);
+}
+.header-upper .dropdown-item:hover {
+  background-color: transparent;
+  color: var(--color-febd69) !important;
+}
+
 .header-bottom {
   background-color: var(--color-232f3e);
 }

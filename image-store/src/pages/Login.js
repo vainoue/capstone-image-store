@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Button, Card, CardContent, CardHeader } from '@mui/material';
 import * as Yup from 'yup';
 import { Helmet } from 'react-helmet-async';
-import { getAuth, signInWithEmailAndPassword, AuthErrorCodes } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 
 import '../styles/Login.css';
-import axios from 'axios';
 
 const Login = () => {
   const [error, setError] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const { search } = useLocation();
+  const redirectInUrl = new URLSearchParams(search).get('redirect');
+  const redirect = redirectInUrl ? redirectInUrl : '/';
 
   const navigate = useNavigate();
 
@@ -31,20 +34,11 @@ const Login = () => {
         values.email,
         values.password
       );
-      const userData = await axios.get(`user/${values.email}`).then(res => res.data);
-      console.log(userData);
-            
       // Successful login, navigate to another route
-      navigate('/');
+      navigate(redirect || '/');
     } catch (error) {
       // Handle error if login fails
       setError(error.message);
-      if (error.code === AuthErrorCodes.INVALID_PASSWORD) {
-        alert("Wrong password. Try again");
-      }
-      else {
-        alert("Wrong e-mail. Try again");
-      }
     }
   };
 
@@ -145,11 +139,9 @@ const Login = () => {
                   </Button>
                   <div className="mt-3">
                     <NavLink to="/forgot-password">Forgot password?</NavLink>
-                    <NavLink to="/register">
+                    <Link to={`/register?redirect=${redirect}`}>
                       Don't have an account yet? Sign up!
-                    </NavLink>
-                  </div>
-                  <div>
+                    </Link>
                   </div>
                 </div>
               </Form>

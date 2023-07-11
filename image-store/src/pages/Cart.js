@@ -3,16 +3,25 @@ import { Helmet } from 'react-helmet-async';
 import { UserContext } from '../contexts/UserContext';
 import '../styles/Cart.css';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 const Cart = () => {
-  const { user, userInfo, handleDeleteFromCart } = useContext(UserContext);
-  const isEmpty = userInfo.cart.length === 0;
+  const { user, handleDeleteFromCart } = useContext(UserContext);
 
-  const cartTotalPrice = userInfo.cart.reduce(
-    (total, image) => total + parseFloat(image.price),
-    0
-  );
+  const userInfo = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))
+    : null;
+
+  const isEmpty = userInfo && userInfo.cart.length === 0;
+  const navigate = useNavigate();
+
+  const cartTotalPrice = userInfo
+    ? userInfo.cart.reduce((total, image) => total + parseFloat(image.price), 0)
+    : 0;
+
+  const checkoutHandler = () => {
+    navigate('/login?redirect=/checkout');
+  };
 
   return (
     <>
@@ -65,9 +74,9 @@ const Cart = () => {
                     <div className="d-flex flex-column align-items-end">
                       <h4>{`SubTotal: $${cartTotalPrice}`}</h4>
                       <p>Taxes and shipping cakculated at checkout</p>
-                      <Link className="button" to={`/cart/checkout`}>
-                        Checkout
-                      </Link>
+                      <div onClick={checkoutHandler}>
+                        <Link className="button">Checkout</Link>
+                      </div>
                     </div>
                   </div>
                 </div>
