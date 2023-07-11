@@ -6,7 +6,6 @@ import * as Yup from 'yup';
 import { Helmet } from 'react-helmet-async';
 import { getAuth, signInWithEmailAndPassword, AuthErrorCodes } from 'firebase/auth';
 import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
-import firebaseConfig from '../firebaseConfig';
 
 import '../styles/Login.css';
 import axiosSet from '../axiosConfig';
@@ -24,17 +23,14 @@ const Login = () => {
     password: Yup.string().required('Password is required'),
   });
 
-  const auth = getAuth(firebaseConfig);
-
   const signIn = async (values) => {
     try {
       //Implement firebase auth
-      const checkFirebase = await signInWithEmailAndPassword(
-        auth,
+      await signInWithEmailAndPassword(
+        getAuth(),
         values.email,
         values.password
       );
-      console.log(checkFirebase.user);
       const userData = await axiosSet.get(`user/${values.email}`).then(res => res.data);
       console.log(userData);
             
@@ -42,8 +38,8 @@ const Login = () => {
       navigate('/');
     } catch (error) {
       // Handle error if login fails
-      //setError(error.message);
-      if (error.code == AuthErrorCodes.INVALID_PASSWORD) {
+      setError(error.message);
+      if (error.code === AuthErrorCodes.INVALID_PASSWORD) {
         alert("Wrong password. Try again");
       }
       else {
