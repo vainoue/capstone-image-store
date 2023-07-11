@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Button, Card, CardContent, CardHeader } from '@mui/material';
 import * as Yup from 'yup';
-import axiosSet from '../axiosConfig';
+import axios from 'axios';
 import { Helmet } from 'react-helmet-async';
 import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
@@ -46,7 +46,11 @@ const Register = () => {
         return;
       }
 
+      const newUser = await createUserWithEmailAndPassword(getAuth(), values.email, values.password);
+      console.log(newUser.user.uid);
+
       const userData = {
+        uid: newUser.user.uid,
         email: values.email,
         password: values.password,
         firstName: values.firstName,
@@ -60,9 +64,7 @@ const Register = () => {
         transactions: [],
       };
 
-      await createUserWithEmailAndPassword(getAuth(), userData.email, userData.password);
-
-      await axiosSet.post('/user', userData);
+      await axios.post('/user', userData);
 
       //Successful registration, navigate to login route
       navigate('/login');

@@ -1,5 +1,4 @@
 import './App.css';
-import axiosSet from './axiosConfig';
 import { useState, useEffect, useContext } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
