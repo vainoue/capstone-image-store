@@ -4,7 +4,6 @@ import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import axios from 'axios';
 
 const initialUser = {
-  uid: '',
   email: '',
   firstName: '',
   lastName: '',
