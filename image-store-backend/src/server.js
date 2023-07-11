@@ -5,6 +5,7 @@ import 'dotenv/config';
 import { db, connectToDb } from './db.js';
 import Stripe from 'stripe';
 import path from 'path';
+import { ObjectId } from 'mongodb';
 
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
@@ -17,73 +18,12 @@ admin.initializeApp({
 });
 
 const app = express();
-//app.use('/api/seed', seedRouter);
-
-// // This is a public sample test API key.
-// // Don’t submit any personally identifiable information in requests made with this key.
-// // Sign in to see your own test API key embedded in code samples.
-// const stripe = new Stripe(process.env.STRIPE_S_KEYS);
 
 app.use(express.static('public'));
 app.use(express.json());
+
 // Serve static files from the "images" directory
 app.use('/images', express.static(path.join(__dirname, 'images')));
-
-// const calculateOrderAmount = (items) => {
-//   // Replace this constant with a calculation of the order's amount
-//   // Calculate the order total on the server to prevent
-//   // people from directly manipulating the amount on the client
-//   return 1400;
-// };
-
-// app.post('/create-payment-intent', async (req, res) => {
-//   const { items } = req.body;
-
-//   // Create a PaymentIntent with the order amount and currency
-//   const paymentIntent = await stripe.paymentIntents.create({
-//     amount: calculateOrderAmount(items),
-//     currency: 'cad',
-//     automatic_payment_methods: {
-//       enabled: true,
-//     },
-//   });
-
-//   res.send({
-//     clientSecret: paymentIntent.client_secret,
-//   });
-// });
-
-app.get('/api/images', async (req, res) => {
-  // Extract the query parameters
-  const currentPage = req.query.page;
-  const imagesPerPage = req.query.perPage;
-
-  const indexOfLastItem = currentPage * imagesPerPage;
-  const indexOfFirstItem = indexOfLastItem - imagesPerPage;
-  try {
-    const images = await db.collection('images').find().toArray();
-
-    let currentItems;
-    if (images.length <= imagesPerPage) {
-      currentItems = images; // Use all images if there are fewer than imagesPerPage
-    } else {
-      currentItems = images.slice(indexOfFirstItem, indexOfLastItem);
-    }
-
-    // Update imageLocation to the image file path
-    currentItems = currentItems.map((item) => {
-      const imageURL = `/images/raws/${path.basename(item.imageLocation)}`;
-      return { ...item, imageLocation: imageURL };
-    });
-
-    const totalPages = Math.ceil(images.length / imagesPerPage);
-    res.json({ images: currentItems, totalPages: totalPages });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: 'An error occurred while fetching images data' });
-  }
-});
 
 // Define a route for handling user registration
 app.post('/api/register', async (req, res) => {
@@ -146,6 +86,77 @@ app.get('/api/user/:uid', async (req, res) => {
     res
       .status(500)
       .json({ error: 'An error occurred while fetching user data' });
+  }
+});
+
+app.get('/api/images', async (req, res) => {
+  // Extract the query parameters
+  const currentPage = req.query.page;
+  const imagesPerPage = req.query.perPage;
+
+  const indexOfLastItem = currentPage * imagesPerPage;
+  const indexOfFirstItem = indexOfLastItem - imagesPerPage;
+  try {
+    const images = await db.collection('images').find().toArray();
+
+    let currentItems;
+    if (images.length <= imagesPerPage) {
+      currentItems = images; // Use all images if there are fewer than imagesPerPage
+    } else {
+      currentItems = images.slice(indexOfFirstItem, indexOfLastItem);
+    }
+
+    // Update imageLocation to the image file path
+    currentItems = currentItems.map((item) => {
+      const imageURL = `/images/raws/${path.basename(item.imageLocation)}`;
+      return { ...item, imageLocation: imageURL };
+    });
+
+    const totalPages = Math.ceil(images.length / imagesPerPage);
+    res.json({ images: currentItems, totalPages: totalPages });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: 'An error occurred while fetching images data' });
+  }
+});
+
+// app.use(async (req, res, next) => {
+//   const { authToken } = req.header;
+
+//   if (authToken) {
+//     try {
+//       req.user = await admin.auth().verifyIdToken(authToken);
+//     } catch (e) {
+//       res.sendStatus(400);
+//     }
+//   }
+
+//   next();
+// });
+
+app.get('/api/images/:imageId', async (req, res) => {
+  const { imageId } = req.params;
+  const id = new ObjectId(imageId);
+
+  //const { uid } = req.user;
+  const status = { isLiked: false, isInCart: false };
+  const image = await db.collection('images').findOne({ _id: id });
+
+  if (image) {
+    // const userInfo = await db.collection('users').findOne({ uid: uid });
+
+    // status.isLiked =
+    //   uid && userInfo.likes.some((likedImage) => likedImage === image._id);
+    // status.isInCart =
+    //   uid && userInfo.likes.some((cartImage) => cartImage === image._id);
+    const imageURL = `/images/raws/${path.basename(image.imageLocation)}`;
+    const updatedImage = { ...image, imageLocation: imageURL };
+
+    res.json({ image: updatedImage, status: status });
+    console.log(updatedImage);
+  } else {
+    res.sendStatus(404);
   }
 });
 

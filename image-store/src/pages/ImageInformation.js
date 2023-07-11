@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import '../styles/ImageInformation.css';
@@ -11,6 +11,7 @@ import {
 } from 'react-icons/bs';
 import { UserContext } from '../contexts/UserContext';
 import { ImageContext } from '../contexts/ImageContext';
+import axios from 'axios';
 
 const CartButton = styled(Button)(({ theme, disabled }) => ({
   padding: '0.5rem 1rem',
@@ -21,35 +22,73 @@ const CartButton = styled(Button)(({ theme, disabled }) => ({
   },
 }));
 
+const theme = createTheme({
+  palette: {
+    buyNow: {
+      main: '#ffad33',
+      text: '#1c1c1b',
+    },
+  },
+});
+
 const ImageInformation = () => {
   const { user, handleAddToCart, handleToggleLike } = useContext(UserContext);
 
+  const [image, setImage] = useState(null);
+  //const [status, setStatus] = useState({ isLiked: false, isInCart: false });
+  const [loading, setLoading] = useState(true);
+  const { imageId } = useParams();
+
   const userInfo = localStorage.getItem('userInfo')
     ? JSON.parse(localStorage.getItem('userInfo'))
-    : null;
+    : { cart: [], likes: [] };
 
-  const location = useLocation();
-  console.log(location);
-  const image = location.state && location.state.image;
+  useEffect(() => {
+    const loadImageInfo = async () => {
+      // const token = user && (await user.getIdToken());
+      // const header = token ? { authtoken: token } : {};
+      //const response = await axios.get(`/api/images/${imageId}`, { header });
+      try {
+        const response = await axios.get(`/api/images/${imageId}`);
+        console.log(response.data);
+        setImage(response.data.image);
+        //setStatus(response.data.status);
+      } catch (error) {
+        console.log('Error loading image data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const theme = createTheme({
-    palette: {
-      buyNow: {
-        main: '#ffad33',
-        text: '#1c1c1b',
-      },
-    },
-  });
+    loadImageInfo();
+  }, []);
+
+  // const location = useLocation();
+  // //console.log(location);
+  // const image = location.state && location.state.image;
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <h1>Loading...</h1>
+      </div>
+    );
+  }
+
+  if (!image) {
+    return (
+      <div className="loading-container">
+        <h1>Image not found</h1>;
+      </div>
+    );
+  }
 
   const isLiked =
     userInfo &&
-    userInfo.likes.some((likedImage) => likedImage._id === image._id);
+    userInfo.likes.some((likedImage) => likedImage.title === image._id);
   const isInCart =
-    userInfo && userInfo.cart.some((cartImage) => cartImage._id === image._id);
-
-  if (!image) {
-    return <h1>Image not found</h1>;
-  }
+    userInfo &&
+    userInfo.cart.some((cartImage) => cartImage.title === image._id);
 
   return (
     <>

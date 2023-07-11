@@ -16,7 +16,9 @@ const Cart = () => {
   const navigate = useNavigate();
 
   const cartTotalPrice = userInfo
-    ? userInfo.cart.reduce((total, image) => total + parseFloat(image.price), 0)
+    ? userInfo.cart
+        .reduce((total, image) => total + parseFloat(image.price), 0)
+        .toFixed(2)
     : 0;
 
   const checkoutHandler = () => {
@@ -51,7 +53,11 @@ const Cart = () => {
                       </Link>
                     </div>
                     <div className="cart-col-2">
-                      <Link to={`/image/${image._id}`}>
+                      <Link
+                        to={`/image/${image._id}`}
+                        state={{ image: image }}
+                        onClick={() => console.log(image)}
+                      >
                         <h5 className="title">{image.title}</h5>
                       </Link>
                     </div>
