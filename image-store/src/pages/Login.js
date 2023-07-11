@@ -4,10 +4,12 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Button, Card, CardContent, CardHeader } from '@mui/material';
 import * as Yup from 'yup';
 import { Helmet } from 'react-helmet-async';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, AuthErrorCodes } from 'firebase/auth';
 import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
+import firebaseConfig from '../firebaseConfig';
 
 import '../styles/Login.css';
+import axiosSet from '../axiosConfig';
 
 const Login = () => {
   const [error, setError] = useState('');
@@ -22,19 +24,31 @@ const Login = () => {
     password: Yup.string().required('Password is required'),
   });
 
+  const auth = getAuth(firebaseConfig);
+
   const signIn = async (values) => {
     try {
       //Implement firebase auth
-      await signInWithEmailAndPassword(
-        getAuth(),
+      const checkFirebase = await signInWithEmailAndPassword(
+        auth,
         values.email,
         values.password
       );
+      console.log(checkFirebase.user);
+      const userData = await axiosSet.get(`user/${values.email}`).then(res => res.data);
+      console.log(userData);
+            
       // Successful login, navigate to another route
       navigate('/');
     } catch (error) {
       // Handle error if login fails
-      setError(error.message);
+      //setError(error.message);
+      if (error.code == AuthErrorCodes.INVALID_PASSWORD) {
+        alert("Wrong password. Try again");
+      }
+      else {
+        alert("Wrong e-mail. Try again");
+      }
     }
   };
 
@@ -138,6 +152,8 @@ const Login = () => {
                     <NavLink to="/register">
                       Don't have an account yet? Sign up!
                     </NavLink>
+                  </div>
+                  <div>
                   </div>
                 </div>
               </Form>
