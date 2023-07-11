@@ -10,7 +10,7 @@ const Cart = () => {
 
   const userInfo = localStorage.getItem('userInfo')
     ? JSON.parse(localStorage.getItem('userInfo'))
-    : null;
+    : { cart: [] };
 
   const isEmpty = userInfo && userInfo.cart.length === 0;
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ const Cart = () => {
                     <div className="cart-col-1 d-flex align-items-center">
                       <Link to={`/image/${image._id}`}>
                         <img
-                          src={image.imageSrc}
+                          src={image.imageLocation}
                           alt={image.title}
                           className="img-fluid"
                         />

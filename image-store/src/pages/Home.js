@@ -1,12 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import '../styles/Home.css';
 import ImageCardsPagination from '../components/ImageCardsPagination';
 import { Helmet } from 'react-helmet-async';
-import { ImageContext } from '../contexts/ImageContext';
 
 const Home = () => {
-  const { images } = useContext(ImageContext);
-
   return (
     <>
       <Helmet>
@@ -19,7 +16,7 @@ const Home = () => {
               <h3 className="section-heading">Image Collection</h3>
             </div>
           </div>
-          <ImageCardsPagination images={images} imagesPerPage={24} />
+          <ImageCardsPagination />
         </div>
       </section>
     </>

@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import data from '../data';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import '../styles/ImageInformation.css';
 import { Button, ThemeProvider, createTheme, styled } from '@mui/material';
@@ -29,10 +28,9 @@ const ImageInformation = () => {
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
 
-  const { images } = useContext(ImageContext);
-
-  const { imageId } = useParams();
-  const image = images.find((image) => image._id === parseInt(imageId));
+  const location = useLocation();
+  console.log(location);
+  const image = location.state && location.state.image;
 
   const theme = createTheme({
     palette: {
@@ -62,7 +60,7 @@ const ImageInformation = () => {
         <div className="container-xxl">
           <div className="row">
             <div className="col-8 d-flex align-items-center justify-content-center">
-              <img src={image.imageSrc} alt={image.title} />
+              <img src={image.imageLocation} alt={image.title} />
             </div>
             <div className="col-4">
               <div className="image-detail">
@@ -76,7 +74,7 @@ const ImageInformation = () => {
                 <div className="image-categories d-flex align-items-center mb-2">
                   <p className="me-2 mb-0">Tag:</p>
                   <div className="category-buttons d-flex flex-wrap">
-                    {image.categories.sort().map((category) => (
+                    {image.tags.sort().map((category) => (
                       <Link
                         to=""
                         className="d-flex align-items-center"
