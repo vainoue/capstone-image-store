@@ -6,8 +6,7 @@ import * as Yup from 'yup';
 import axiosSet from '../axiosConfig';
 import { Helmet } from 'react-helmet-async';
 import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
-import firebaseConfig from '../firebaseConfig';
-import { getAuth, createUserWithEmailAndPassword, AuthErrorCodes } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import '../styles/Register.css';
 
 const Register = () => {
@@ -40,8 +39,6 @@ const Register = () => {
     address: Yup.string().required('Address is required'),
   });
 
-  const auth = getAuth(firebaseConfig);
-
   const signUp = async (values) => {
     try {
       if (values.password !== values.confirmPassword) {
@@ -63,7 +60,7 @@ const Register = () => {
         transactions: [],
       };
 
-      await createUserWithEmailAndPassword(auth, userData.email, userData.password);
+      await createUserWithEmailAndPassword(getAuth(), userData.email, userData.password);
 
       await axiosSet.post('/user', userData);
 
