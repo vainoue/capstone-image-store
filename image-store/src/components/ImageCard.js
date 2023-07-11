@@ -63,9 +63,13 @@ const ImageCard = ({ image }) => {
                 </>
               )}
             </div>
-            <Link to={`/image/${image._id}`}>
+            <Link
+              to={`/image/${image._id}`}
+              state={{ image: image }}
+              onClick={() => console.log(image)}
+            >
               <div className="product-image">
-                <img src={image.imageSrc} alt={image.title} />
+                <img src={image.imageLocation} alt={image.title} />
               </div>
             </Link>
             <div className="d-flex align-items-center justify-content-between">

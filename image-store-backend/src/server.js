@@ -4,6 +4,11 @@ import express from 'express';
 import 'dotenv/config';
 import { db, connectToDb } from './db.js';
 import Stripe from 'stripe';
+import path from 'path';
+
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // initialize firebase
 const credentials = JSON.parse(fs.readFileSync('./credentials.json'));
@@ -21,6 +26,8 @@ const app = express();
 
 app.use(express.static('public'));
 app.use(express.json());
+// Serve static files from the "images" directory
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // const calculateOrderAmount = (items) => {
 //   // Replace this constant with a calculation of the order's amount
@@ -45,10 +52,32 @@ app.use(express.json());
 //     clientSecret: paymentIntent.client_secret,
 //   });
 // });
-app.get('/', async (req, res) => {
+
+app.get('/api/images', async (req, res) => {
+  // Extract the query parameters
+  const currentPage = req.query.page;
+  const imagesPerPage = req.query.perPage;
+
+  const indexOfLastItem = currentPage * imagesPerPage;
+  const indexOfFirstItem = indexOfLastItem - imagesPerPage;
   try {
-    const images = await db.collection('images').find();
-    res.json(images);
+    const images = await db.collection('images').find().toArray();
+
+    let currentItems;
+    if (images.length <= imagesPerPage) {
+      currentItems = images; // Use all images if there are fewer than imagesPerPage
+    } else {
+      currentItems = images.slice(indexOfFirstItem, indexOfLastItem);
+    }
+
+    // Update imageLocation to the image file path
+    currentItems = currentItems.map((item) => {
+      const imageURL = `/images/raws/${path.basename(item.imageLocation)}`;
+      return { ...item, imageLocation: imageURL };
+    });
+
+    const totalPages = Math.ceil(images.length / imagesPerPage);
+    res.json({ images: currentItems, totalPages: totalPages });
   } catch (error) {
     res
       .status(500)
