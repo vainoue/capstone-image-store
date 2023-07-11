@@ -7,8 +7,8 @@ import { UserContext } from '../contexts/UserContext';
 const Header = () => {
   const { user, handleSignOut } = useContext(UserContext);
 
-  const userInfo = localStorage.getItem('userInfo')
-    ? JSON.parse(localStorage.getItem('userInfo'))
+  const userInfo = sessionStorage.getItem('userInfo')
+    ? JSON.parse(sessionStorage.getItem('userInfo'))
     : null;
 
   const cartImageCount = userInfo ? userInfo.cart.length : 0;

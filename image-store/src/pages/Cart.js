@@ -8,8 +8,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 const Cart = () => {
   const { user, handleDeleteFromCart } = useContext(UserContext);
 
-  const userInfo = localStorage.getItem('userInfo')
-    ? JSON.parse(localStorage.getItem('userInfo'))
+  const userInfo = sessionStorage.getItem('userInfo')
+    ? JSON.parse(sessionStorage.getItem('userInfo'))
     : { cart: [] };
 
   const isEmpty = userInfo && userInfo.cart.length === 0;

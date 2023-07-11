@@ -39,8 +39,8 @@ const ImageInformation = () => {
   const [loading, setLoading] = useState(true);
   const { imageId } = useParams();
 
-  const userInfo = localStorage.getItem('userInfo')
-    ? JSON.parse(localStorage.getItem('userInfo'))
+  const userInfo = sessionStorage.getItem('userInfo')
+    ? JSON.parse(sessionStorage.getItem('userInfo'))
     : { cart: [], likes: [] };
 
   useEffect(() => {

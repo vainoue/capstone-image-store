@@ -4,28 +4,45 @@ import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import axiosSet from '../axiosConfig';
-import { Button, Card, CardContent } from '@mui/material';
+import { Button, Card, CardContent, CardHeader } from '@mui/material';
 import { useState } from 'react';
 import { UserContext } from '../contexts/UserContext';
+import axios from 'axios';
 
 const Profile = () => {
   //get the userId from URL
   const { user, userInfo } = useContext(UserContext);
 
   const [error, setError] = useState();
-  const navigate = useNavigate();
 
-  const validationSchema = Yup.object({});
+  const validationSchema = Yup.object({
+    firstName: Yup.string().required('First name is required'),
+    lastName: Yup.string().required('Last name is required'),
+    email: Yup.string()
+      .email('Invalid email address')
+      .required('Email is required'),
+    phone: Yup.string().matches(
+      /^[0-9\- ]{10}$/,
+      'Phone number must contain 10 digits'
+    ),
+    address: Yup.string().required('Address is required'),
+  });
 
   const updateUser = async (e) => {
-    await axiosSet.post('/api/user/URL', {
-      email: e.email,
-      firstName: e.firstName,
-      lastName: e.lastName,
-      phone: e.phone,
-      address: e.address,
-    });
+    const token = user && (await user.getIdToken());
+    const headers = token ? { authtoken: token } : {};
+    console.log(headers);
+    await axios.post(
+      '/api/user/profile/',
+      {
+        email: e.email,
+        firstName: e.firstName,
+        lastName: e.lastName,
+        phone: e.phone,
+        address: e.address,
+      },
+      { headers }
+    );
   };
 
   //navigate('/profile/:userId');
@@ -36,15 +53,22 @@ const Profile = () => {
         <title>Profile</title>
       </Helmet>
       <h1 className="text-center mt-5">My Account</h1>
-      <div className="sign-up-body d-flex align-items-center justify-content-center flex-column mt-2">
+      <div className="profile-body d-flex align-items-center justify-content-center flex-column mt-2">
         <Card
           className="profile-card mt-4"
           variant="outlined"
           sx={{
-            width: 300,
+            width: 600,
             padding: 1,
           }}
         >
+          <CardHeader
+            title="Account Information"
+            className="profile-card-header mt-2"
+            sx={{
+              fontSize: 20,
+            }}
+          />
           <CardContent className="profile-card-content">
             {error && <p className="error">{error}</p>}
             <Formik
