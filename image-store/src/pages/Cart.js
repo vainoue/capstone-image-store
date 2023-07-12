@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { UserContext } from '../contexts/UserContext';
 import '../styles/Cart.css';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { loadStripe } from '@stripe/stripe-js';
 
 const Cart = () => {
   const { user, handleDeleteFromCart } = useContext(UserContext);
@@ -21,11 +22,46 @@ const Cart = () => {
         .toFixed(2)
     : 0;
 
-  const checkoutHandler = () => {
-    if (user) {
-      navigate('/checkout');
-    } else {
-      navigate('/login?redirect=/checkout');
+  // const checkoutHandler = () => {
+  //   if (user) {
+  //     // Perform the form submission
+  //     const form = document.createElement('form');
+  //     form.action = '/create-checkout-session';
+  //     form.method = 'POST';
+  //     document.body.appendChild(form);
+  //     form.submit();
+  //   } else {
+  //     navigate('/login?redirect=/cart/checkout');
+  //   }
+  // };
+
+  const makePayment = async () => {
+    const stripe = await loadStripe(
+      'pk_test_51NNV0sK99pLuShav4XQEj9HQ969kexFwql2qttg2Epqyv6e5CdgeaIbajVxEgsAWYxaPEuFNcapdUkfifVnJjohp00JGRjUdbU'
+    );
+    const product = userInfo.cart;
+    const body = { product };
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    const response = await fetch(
+      'http://localhost:8080/payment/create-checkout-session',
+      {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(body),
+      }
+    );
+
+    const session = await response.json();
+
+    const result = stripe.redirectToCheckout({
+      sessionId: session.id,
+    });
+
+    if (result.error) {
+      console.log(result.error);
     }
   };
 
@@ -84,9 +120,16 @@ const Cart = () => {
                     <div className="d-flex flex-column align-items-end">
                       <h4>{`SubTotal: $${cartTotalPrice}`}</h4>
                       <p>Taxes and shipping cakculated at checkout</p>
-                      <div onClick={checkoutHandler}>
+                      <div onClick={makePayment}>
                         <Link className="button">Checkout</Link>
                       </div>
+
+                      {/* <form
+                        action="http://localhost:8080/create-checkout-session"
+                        method="POST"
+                      >
+                        <Link className="button">Checkout</Link>
+                      </form> */}
                     </div>
                   </div>
                 </div>

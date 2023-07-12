@@ -27,6 +27,7 @@ export const UserProvider = ({ children }) => {
   });
 
   console.log(userInfo);
+  console.log(localStorage.getItem('userInfo'));
 
   const [isLoading, setIsLoading] = useState(true);
 
