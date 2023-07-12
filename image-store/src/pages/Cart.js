@@ -8,8 +8,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 const Cart = () => {
   const { user, handleDeleteFromCart } = useContext(UserContext);
 
-  const userInfo = sessionStorage.getItem('userInfo')
-    ? JSON.parse(sessionStorage.getItem('userInfo'))
+  const userInfo = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))
     : { cart: [] };
 
   const isEmpty = userInfo && userInfo.cart.length === 0;
@@ -22,7 +22,11 @@ const Cart = () => {
     : 0;
 
   const checkoutHandler = () => {
-    navigate('/login?redirect=/checkout');
+    if (user) {
+      navigate('/checkout');
+    } else {
+      navigate('/login?redirect=/checkout');
+    }
   };
 
   return (

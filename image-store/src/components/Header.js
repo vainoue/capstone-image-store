@@ -7,8 +7,8 @@ import { UserContext } from '../contexts/UserContext';
 const Header = () => {
   const { user, handleSignOut } = useContext(UserContext);
 
-  const userInfo = sessionStorage.getItem('userInfo')
-    ? JSON.parse(sessionStorage.getItem('userInfo'))
+  const userInfo = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
 
   const cartImageCount = userInfo ? userInfo.cart.length : 0;
@@ -71,7 +71,7 @@ const Header = () => {
                 <div>
                   <Link
                     className="link d-flex align-items-center gap-10 text-white p-1"
-                    to={`/liked`}
+                    to={user ? `/liked` : '/login?redirect=/liked'}
                   >
                     <BiLike className="fs-1" />
                     <p className="mb-0">
