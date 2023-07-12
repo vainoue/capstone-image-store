@@ -47,20 +47,28 @@ app.post(
 
 app.post('/payment/create-checkout-session', async (req, res) => {
   const { product } = req.body;
+  console.log(product);
+
+  const lineItems = product.map((image) => {
+    return {
+      price_data: {
+        currency: 'cad',
+        unit_amount: Math.round(image.price * 100),
+        product_data: {
+          name: image.title,
+          description: image.description,
+          images: ['https://example.com/t-shirt.png'],
+        },
+      },
+      quantity: 1,
+    };
+  });
+
+  console.log(lineItems);
+
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
-    line_items: [
-      {
-        price_data: {
-          currency: 'cad',
-          product_data: {
-            name: 'product.name',
-          },
-          unit_amount: 100,
-        },
-        quantity: 1,
-      },
-    ],
+    line_items: lineItems,
     mode: 'payment',
     success_url: 'http://localhost:3000/success',
     cancel_url: 'http://localhost:3000/cancel',
