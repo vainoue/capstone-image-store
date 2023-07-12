@@ -148,9 +148,9 @@ app.get('/api/images', async (req, res) => {
   }
 });
 
-app.post('/api/url', async (req, res) => {
-  console.log(req.body);
-});
+// app.post('/api/url', async (req, res) => {
+//   console.log(req.body);
+// });
 
 app.use(async (req, res, next) => {
   const { authtoken } = req.headers;

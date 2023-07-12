@@ -22,9 +22,12 @@ export const UserProvider = ({ children }) => {
 
   const [user, setUser] = useState(null);
   const [userInfo, setUserInfo] = useState(() => {
-    const storedUserInfo = sessionStorage.getItem('userInfo');
+    const storedUserInfo = localStorage.getItem('userInfo');
     return storedUserInfo ? JSON.parse(storedUserInfo) : initialUser;
   });
+
+  console.log(userInfo);
+
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -35,7 +38,7 @@ export const UserProvider = ({ children }) => {
           const response = await axios.get(`/api/user/${user.uid}`);
           setUser(user);
           setUserInfo(response.data);
-          sessionStorage.setItem('userInfo', JSON.stringify(response.data));
+          localStorage.setItem('userInfo', JSON.stringify(response.data));
         } catch (error) {
           console.log('Error loading user data:', error);
         }
@@ -43,14 +46,14 @@ export const UserProvider = ({ children }) => {
         // User is signed out, reset the user state
         setUser(null);
         setUserInfo(initialUser);
-        sessionStorage.removeItem('userInfo');
+        localStorage.removeItem('userInfo');
       }
 
       setIsLoading(false);
     });
 
     // Load user data from localStorage if available
-    const storedUserInfo = sessionStorage.getItem('userInfo');
+    const storedUserInfo = localStorage.getItem('userInfo');
     if (storedUserInfo) {
       setUserInfo(JSON.parse(storedUserInfo));
     }
@@ -64,7 +67,7 @@ export const UserProvider = ({ children }) => {
       await signOut(auth);
       setUser(null);
       setUserInfo(initialUser);
-      sessionStorage.removeItem('userInfo');
+      localStorage.removeItem('userInfo');
     } catch (error) {
       console.log('Error signing out:', error);
     }
@@ -89,7 +92,7 @@ export const UserProvider = ({ children }) => {
       cart: [...userInfo.cart, addedImage],
     };
     setUserInfo(updatedUserInfo);
-    sessionStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
+    localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
     console.log(`Adding image`, addedImage);
     console.log(updatedUserInfo);
   };
@@ -99,7 +102,7 @@ export const UserProvider = ({ children }) => {
     const updatedUserInfo = { ...userInfo, cart: updatedCart };
 
     setUserInfo(updatedUserInfo);
-    sessionStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
+    localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
   };
 
   const handleToggleLike = (imageId) => {
@@ -112,7 +115,7 @@ export const UserProvider = ({ children }) => {
       );
       const updatedUserInfo = { ...userInfo, likes: updatedLikes };
       setUserInfo(updatedUserInfo);
-      sessionStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
+      localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
       console.log(`Removed image ${imageId} from liked images`);
       console.log(updatedUserInfo);
     } else {
@@ -123,7 +126,7 @@ export const UserProvider = ({ children }) => {
         likes: [...userInfo.likes, addedImage],
       };
       setUserInfo(updatedUserInfo);
-      sessionStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
+      localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
       console.log(`Added image`, addedImage);
       console.log(updatedUserInfo);
     }
