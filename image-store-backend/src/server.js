@@ -6,6 +6,8 @@ import { db, connectToDb } from './db.js';
 import Stripe from 'stripe';
 import path from 'path';
 import { ObjectId } from 'mongodb';
+import cors from 'cors';
+import multer from 'multer';
 
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
@@ -26,29 +28,52 @@ const stripe = new Stripe(process.env.STRIPE_S_KEYS);
 
 app.use(express.static('public'));
 app.use(express.json());
+app.use(cors());
 
 // Serve static files from the "images" directory
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-const calculateOrderAmount = (items) => {
-  // Replace this constant with a calculation of the order's amount
-  // Calculate the order total on the server to prevent
-  // people from directly manipulating the amount on the client
-  return 1400;
-};
-app.post('/create-payment-intent', async (req, res) => {
-  const { items } = req.body;
-  // Create a PaymentIntent with the order amount and currency
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: calculateOrderAmount(items),
-    currency: 'cad',
-    automatic_payment_methods: {
-      enabled: true,
-    },
+const upload = multer({ dest: 'uploads/' });
+app.post(
+  '/test_upload',
+  upload.single('product_image'),
+  function (req, res, next) {
+    console.log(req.file);
+    // req.file is the `avatar` file
+    // req.body will hold the text fields, if there were any
+    res.status(200);
+  }
+);
+
+app.post('/payment/create-checkout-session', async (req, res) => {
+  const { product } = req.body;
+  console.log(product);
+
+  const lineItems = product.map((image) => {
+    return {
+      price_data: {
+        currency: 'cad',
+        unit_amount: Math.round(image.price * 100),
+        product_data: {
+          name: image.title,
+          description: image.description,
+          images: ['https://example.com/t-shirt.png'],
+        },
+      },
+      quantity: 1,
+    };
   });
-  res.send({
-    clientSecret: paymentIntent.client_secret,
+
+  console.log(lineItems);
+
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    line_items: lineItems,
+    mode: 'payment',
+    success_url: 'http://localhost:3000/success',
+    cancel_url: 'http://localhost:3000/cancel',
   });
+  res.json({ id: session.id });
 });
 
 // Define a route for handling user registration

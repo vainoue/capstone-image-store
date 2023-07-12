@@ -24,6 +24,7 @@ const ImageUpload = () => {
 
   const imageUpload = async (values) => {
     console.log(values);
+
     try {
       const post = {
         title: values.title,
