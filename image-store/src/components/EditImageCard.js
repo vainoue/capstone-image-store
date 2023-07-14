@@ -3,21 +3,29 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Button, Fade, MenuItem, Modal, Paper, TextField } from '@mui/material';
 import '../styles/EditImageCard.css';
+import { styled } from '@mui/system';
 import MultipleSelectChip from './MultipleSelectChip';
+
+const tagOptions = [
+  'Exploration and Production',
+  'Refining and Processing',
+  'Transportation and Distribution',
+  'Renewable Energy and Sustainability',
+  'Economics and Markets',
+  'Health, Safety, and Environment (HSE)',
+  'Technology and Innovation',
+];
+
+const StyledTextField = styled(TextField)(
+  () => `
+  width: 500px;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;`
+);
 
 const EditImageCard = ({ selectedImage, editOpen, setEditOpen }) => {
   const [error, setError] = useState('');
-  const [tags, setTags] = useState(selectedImage.tags);
-
-  const tagOptions = [
-    'Exploration and Production',
-    'Refining and Processing',
-    'Transportation and Distribution',
-    'Renewable Energy and Sustainability',
-    'Economics and Markets',
-    'Health, Safety, and Environment (HSE)',
-    'Technology and Innovation',
-  ];
 
   const validationSchema = Yup.object({
     title: Yup.string().required('Title is required'),
@@ -57,7 +65,7 @@ const EditImageCard = ({ selectedImage, editOpen, setEditOpen }) => {
                 description: selectedImage.description,
                 status: selectedImage.status,
                 price: selectedImage.price,
-                tag: tags,
+                tag: selectedImage.tags,
               }}
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
@@ -75,7 +83,7 @@ const EditImageCard = ({ selectedImage, editOpen, setEditOpen }) => {
                       <label htmlFor="title">Title </label>
                       <Field
                         type="text"
-                        as={TextField}
+                        as={StyledTextField}
                         id="title"
                         name="title"
                         placeholder="Enter Image Title"
@@ -92,11 +100,14 @@ const EditImageCard = ({ selectedImage, editOpen, setEditOpen }) => {
                       <label htmlFor="description">Description</label>
                       <Field
                         type="text"
-                        as={TextField}
+                        as={StyledTextField}
+                        multiline
                         id="description"
                         name="description"
                         placeholder="Enter Image Description"
                         className="edit-field"
+                        minRows={3}
+                        maxRows={4}
                       />
                       <ErrorMessage
                         name="description"
@@ -109,7 +120,7 @@ const EditImageCard = ({ selectedImage, editOpen, setEditOpen }) => {
                       <label htmlFor="price">Price </label>
                       <Field
                         type="number"
-                        as={TextField}
+                        as={StyledTextField}
                         id="price"
                         name="price"
                         placeholder="Enter Image Price"
@@ -129,8 +140,6 @@ const EditImageCard = ({ selectedImage, editOpen, setEditOpen }) => {
                         name="tag"
                         component={MultipleSelectChip}
                         names={tagOptions}
-                        fieldName={tags}
-                        setFieldName={setTags}
                       />
                       <ErrorMessage
                         name="tag"
@@ -142,7 +151,7 @@ const EditImageCard = ({ selectedImage, editOpen, setEditOpen }) => {
                     <div className="form-field">
                       <label htmlFor="status">Status </label>
                       <Field
-                        as={TextField}
+                        as={StyledTextField}
                         select
                         id="status"
                         name="status"
@@ -158,15 +167,11 @@ const EditImageCard = ({ selectedImage, editOpen, setEditOpen }) => {
                         className="error"
                       />
                     </div>
-
-                    <Button
-                      type="submit"
-                      className="mt-3"
-                      color="primary"
-                      variant="contained  "
-                    >
-                      Save Changes
-                    </Button>
+                    <div className="edit-image-button">
+                      <Button type="submit" color="primary" variant="contained">
+                        Save Changes
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </Form>
