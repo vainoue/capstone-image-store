@@ -19,15 +19,12 @@ const MenuProps = {
   },
 };
 
-const MultipleSelectChip = ({ names, fieldName, setFieldName }) => {
+const MultipleSelectChip = ({ names, field }) => {
   const theme = createTheme();
 
   const handleChange = (event) => {
     const { value } = event.target;
-    setFieldName(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value
-    );
+    field.onChange({ target: { name: field.name, value: value } });
   };
 
   function getStyles(name, fieldName, theme) {
@@ -42,13 +39,13 @@ const MultipleSelectChip = ({ names, fieldName, setFieldName }) => {
   return (
     <div>
       <ThemeProvider theme={theme}>
-        <FormControl sx={{ m: 1, width: 300 }}>
+        <FormControl sx={{ width: 500 }}>
           <InputLabel id="demo-multiple-chip-label">Tags</InputLabel>
           <Select
             labelId="demo-multiple-chip-label"
             id="demo-multiple-chip"
             multiple
-            value={fieldName}
+            value={field.value}
             onChange={handleChange}
             input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
             renderValue={(selected) => (
@@ -64,7 +61,7 @@ const MultipleSelectChip = ({ names, fieldName, setFieldName }) => {
               <MenuItem
                 key={name}
                 value={name}
-                style={getStyles(name, fieldName, theme)}
+                style={getStyles(name, field.value, theme)}
               >
                 {name}
               </MenuItem>

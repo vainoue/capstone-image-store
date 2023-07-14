@@ -1,5 +1,5 @@
 .edit-module {
-  width: 70%;
+  width: 75%;
   margin: auto;
 }
 
@@ -16,10 +16,15 @@
 }
 
 .edit-content .form-field label {
-  flex-basis: 18%;
+  flex-basis: 20%;
 }
 
 .edit-content .form-field input,
 .edit-content .form-field select {
-  flex-basis: 75%;
+  flex-basis: 80%;
+}
+
+.edit-content .edit-image-button {
+  display: flex;
+  justify-content: center;
 }
