@@ -5,7 +5,6 @@ import '../styles/ImageCard.css';
 import { Button, Card, styled, IconButton } from '@mui/material';
 import { UserContext } from '../contexts/UserContext';
 import EditIcon from '@mui/icons-material/Edit';
-import EditImageCard from './EditImageCard';
 
 const CartButton = styled(Button)(({ theme, disabled }) => ({
   padding: '0.5rem 1rem',
@@ -16,7 +15,7 @@ const CartButton = styled(Button)(({ theme, disabled }) => ({
   },
 }));
 
-const ImageCard = ({ image }) => {
+const ImageCard = ({ image, handleEdit }) => {
   const { user, handleAddToCart, handleToggleLike } = useContext(UserContext);
 
   const userInfo = localStorage.getItem('userInfo')
@@ -33,14 +32,6 @@ const ImageCard = ({ image }) => {
     setIsHovered(false);
   };
 
-  const [editImageCardVisible, setEditImageCardVisible] = useState(false);
-
-  const handleEdit = (imageId) => {
-    // Set the editImageCardVisible state to true
-    setEditImageCardVisible(true);
-    // Add any additional logic you need for handling the edit action
-  };
-
   const isLiked =
     userInfo &&
     userInfo.likes.some((likedImage) => likedImage._id === image._id);
@@ -49,14 +40,6 @@ const ImageCard = ({ image }) => {
 
   return (
     <>
-      {editImageCardVisible && (
-        <div className="edit-image-card-container">
-          <EditImageCard
-            imageId={image._id}
-            onClose={() => setEditImageCardVisible(false)}
-          />
-        </div>
-      )}
       <div className="col-3 mt-3">
         <Card
           variant="outlined"
@@ -73,7 +56,7 @@ const ImageCard = ({ image }) => {
                       aria-label="modify"
                       type="button"
                       color="primary"
-                      onClick={() => handleEdit(image._id)}
+                      onClick={() => handleEdit(image)}
                     >
                       <EditIcon className="fs-2" />
                     </IconButton>

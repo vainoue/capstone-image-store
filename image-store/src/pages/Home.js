@@ -1,9 +1,24 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import '../styles/Home.css';
 import ImageCardsPagination from '../components/ImageCardsPagination';
 import { Helmet } from 'react-helmet-async';
+import EditImageCard from '../components/EditImageCard';
+import { ImageContext } from '../contexts/ImageContext';
 
 const Home = () => {
+  const { images, currentPage, totalPages, paginate } =
+    useContext(ImageContext);
+
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [editOpen, setEditOpen] = useState(false);
+
+  const handleEdit = (image) => {
+    // set selected Image
+    setSelectedImage(image);
+    // Set the editImageCardVisible state to true
+    setEditOpen(true);
+  };
+
   return (
     <>
       <Helmet>
@@ -16,7 +31,23 @@ const Home = () => {
               <h3 className="section-heading">Image Collection</h3>
             </div>
           </div>
-          <ImageCardsPagination />
+          {selectedImage && (
+            <>
+              <EditImageCard
+                selectedImage={selectedImage}
+                editOpen={editOpen}
+                setEditOpen={setEditOpen}
+              />
+            </>
+          )}
+
+          <ImageCardsPagination
+            images={images}
+            handleEdit={handleEdit}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            paginate={paginate}
+          />
         </div>
       </section>
     </>

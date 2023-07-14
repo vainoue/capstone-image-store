@@ -26,10 +26,3 @@
   right: 5%;
   /* color: var(--color-f474b4); */
 }
-
-.edit-image-card-container {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  /* Add additional styling as needed */
-}

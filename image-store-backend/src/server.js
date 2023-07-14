@@ -96,7 +96,7 @@ app.post('/api/user/register', async (req, res) => {
       address: req.body.address,
       role: 'user',
       cart: [],
-      like: [],
+      likes: [],
       transaction: [],
     };
 

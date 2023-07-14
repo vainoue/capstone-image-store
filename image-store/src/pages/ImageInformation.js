@@ -1,8 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import '../styles/ImageInformation.css';
-import { Button, ThemeProvider, createTheme, styled } from '@mui/material';
+import {
+  Button,
+  IconButton,
+  ThemeProvider,
+  createTheme,
+  styled,
+} from '@mui/material';
 import {
   BsCartCheck,
   BsCartPlus,
@@ -10,7 +16,6 @@ import {
   BsSuitHeartFill,
 } from 'react-icons/bs';
 import { UserContext } from '../contexts/UserContext';
-import { ImageContext } from '../contexts/ImageContext';
 import axios from 'axios';
 
 const CartButton = styled(Button)(({ theme, disabled }) => ({
@@ -85,10 +90,9 @@ const ImageInformation = () => {
 
   const isLiked =
     userInfo &&
-    userInfo.likes.some((likedImage) => likedImage.title === image._id);
+    userInfo.likes.some((likedImage) => likedImage._id === image._id);
   const isInCart =
-    userInfo &&
-    userInfo.cart.some((cartImage) => cartImage.title === image._id);
+    userInfo && userInfo.cart.some((cartImage) => cartImage._id === image._id);
 
   return (
     <>
@@ -129,16 +133,27 @@ const ImageInformation = () => {
                 </p>
                 <div className="like-icon">
                   {user &&
+                    userInfo.role === 'user' &&
                     (isLiked ? (
-                      <BsSuitHeartFill
-                        className="fs-2"
+                      <IconButton
+                        edge="end"
+                        aria-label="modify"
+                        type="button"
+                        style={{ color: '#f474b4' }}
                         onClick={() => handleToggleLike(image._id)}
-                      />
+                      >
+                        <BsSuitHeartFill className="fs-2" />
+                      </IconButton>
                     ) : (
-                      <BsSuitHeart
-                        className="fs-2"
+                      <IconButton
+                        edge="end"
+                        aria-label="modify"
+                        type="button"
+                        style={{ color: '#f474b4' }}
                         onClick={() => handleToggleLike(image._id)}
-                      />
+                      >
+                        <BsSuitHeart className="fs-2" />
+                      </IconButton>
                     ))}
                 </div>
               </div>
