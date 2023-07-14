@@ -1,9 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { UserContext } from '../contexts/UserContext';
 import '../styles/Cart.css';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 
 const Cart = () => {
@@ -14,7 +14,6 @@ const Cart = () => {
     : { cart: [] };
 
   const isEmpty = userInfo && userInfo.cart.length === 0;
-  const navigate = useNavigate();
 
   const cartTotalPrice = userInfo
     ? userInfo.cart
@@ -22,23 +21,8 @@ const Cart = () => {
         .toFixed(2)
     : 0;
 
-  // const checkoutHandler = () => {
-  //   if (user) {
-  //     // Perform the form submission
-  //     const form = document.createElement('form');
-  //     form.action = '/create-checkout-session';
-  //     form.method = 'POST';
-  //     document.body.appendChild(form);
-  //     form.submit();
-  //   } else {
-  //     navigate('/login?redirect=/cart/checkout');
-  //   }
-  // };
-
   const makePayment = async () => {
-    const stripe = await loadStripe(
-      'pk_test_51NNV0sK99pLuShav4XQEj9HQ969kexFwql2qttg2Epqyv6e5CdgeaIbajVxEgsAWYxaPEuFNcapdUkfifVnJjohp00JGRjUdbU'
-    );
+    const stripe = await loadStripe(process.env.REACT_APP_STRIPE_P_KEYS);
     const product = userInfo.cart;
     const body = { product };
     const headers = {

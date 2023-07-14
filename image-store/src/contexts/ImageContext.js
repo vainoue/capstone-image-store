@@ -27,7 +27,6 @@ export const ImageProvider = ({ children }) => {
 
   const paginate = (event, pageNumber) => {
     setCurrentPage(pageNumber);
-    console.log(currentPage);
   };
 
   return (

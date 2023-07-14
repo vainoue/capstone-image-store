@@ -1,17 +1,19 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Pagination } from '@mui/material';
 import ImageCard from './ImageCard';
-import { ImageContext } from '../contexts/ImageContext';
 
-const ImageCardsPagination = () => {
-  const { images, currentPage, totalPages, paginate } =
-    useContext(ImageContext);
-
+const ImageCardsPagination = ({
+  images,
+  handleEdit,
+  currentPage,
+  totalPages,
+  paginate,
+}) => {
   return (
     <>
       <div className="row">
         {images.map((image) => (
-          <ImageCard key={image._id} image={image} />
+          <ImageCard key={image._id} image={image} handleEdit={handleEdit} />
         ))}
       </div>
       <div className="pagination-container d-flex align-items-center justify-content-center mt-5">
