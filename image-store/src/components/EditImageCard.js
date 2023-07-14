@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Button, Fade, MenuItem, Modal, Paper, TextField } from '@mui/material';
 import '../styles/EditImageCard.css';
 import { styled } from '@mui/system';
 import MultipleSelectChip from './MultipleSelectChip';
+import axios from 'axios';
+import { ImageContext } from '../contexts/ImageContext';
+import { UserContext } from '../contexts/UserContext';
 
 const tagOptions = [
   'Exploration and Production',
@@ -25,6 +28,8 @@ const StyledTextField = styled(TextField)(
 );
 
 const EditImageCard = ({ selectedImage, editOpen, setEditOpen }) => {
+  const { user } = useContext(UserContext);
+  const { UpdateImage } = useContext(ImageContext);
   const [error, setError] = useState('');
 
   const validationSchema = Yup.object({
@@ -34,19 +39,27 @@ const EditImageCard = ({ selectedImage, editOpen, setEditOpen }) => {
     price: Yup.number()
       .typeError('Price must be a number')
       .required('Price is required'),
-    tag: Yup.array().min(1, 'Tag is required').required('Tag is required'),
+    tags: Yup.array().min(1, 'Tag is required').required('Tag is required'),
   });
 
   const handleSubmit = async (values) => {
+    // Make an API call or call a function to update the image with the new values
+    const token = user && (await user.getIdToken());
+    const headers = token ? { authtoken: token } : {};
+
     try {
-      // Make an API call or call a function to update the image with the new values
-      //await updateImage(selectedImage._id, values);
-      // Handle success if necessary
-      console.log(values);
+      const image = {
+        ...selectedImage,
+        ...values,
+      };
+
+      UpdateImage(image, headers);
+
       setEditOpen(false);
     } catch (error) {
       // Handle error if update fails
       setError(error.message);
+      setEditOpen(false);
     }
   };
 
@@ -65,7 +78,7 @@ const EditImageCard = ({ selectedImage, editOpen, setEditOpen }) => {
                 description: selectedImage.description,
                 status: selectedImage.status,
                 price: selectedImage.price,
-                tag: selectedImage.tags,
+                tags: selectedImage.tags,
               }}
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
@@ -134,15 +147,15 @@ const EditImageCard = ({ selectedImage, editOpen, setEditOpen }) => {
                     </div>
 
                     <div className="form-field">
-                      <label htmlFor="tag">Tags </label>
+                      <label htmlFor="tags">Tags </label>
                       <Field
                         type="text"
-                        name="tag"
+                        name="tags"
                         component={MultipleSelectChip}
                         names={tagOptions}
                       />
                       <ErrorMessage
-                        name="tag"
+                        name="tags"
                         component="div"
                         className="error"
                       />
