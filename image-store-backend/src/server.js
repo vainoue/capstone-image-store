@@ -145,11 +145,21 @@ app.get('/api/images', async (req, res) => {
   // Extract the query parameters
   const currentPage = req.query.page;
   const imagesPerPage = req.query.perPage;
+  //const isAll = req.query.status === 'All';
 
   const indexOfLastItem = currentPage * imagesPerPage;
   const indexOfFirstItem = indexOfLastItem - imagesPerPage;
   try {
     const images = await db.collection('images').find().toArray();
+    // let images;
+    // if (isAll) {
+    //   images = await db.collection('images').find().toArray();
+    // } else {
+    //   images = await db
+    //     .collection('images')
+    //     .find({ status: 'Active' })
+    //     .toArray();
+    // }
 
     let currentItems;
     if (images.length <= imagesPerPage) {
@@ -249,6 +259,32 @@ app.get('/api/images/:imageId', async (req, res) => {
     console.log(updatedImage);
   } else {
     res.sendStatus(404);
+  }
+});
+
+app.post('/api/images/update', async (req, res) => {
+  try {
+    const { _id, title, description, price, tags, status } = req.body;
+
+    await db.collection('images').findOneAndUpdate(
+      { _id: new ObjectId(_id) },
+      {
+        $set: {
+          ...(title && { title }),
+          ...(description && { description }),
+          ...(price && { price }),
+          ...(tags && { tags }),
+          ...(status && { status }),
+          dateEdited: new Date(),
+        },
+      },
+      { returnDocument: 'after' }
+    );
+
+    res.sendStatus(200);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred while updating the image');
   }
 });
 
