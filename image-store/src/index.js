@@ -33,11 +33,11 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <HelmetProvider>
-      <ImageProvider>
-        <UserProvider>
+      <UserProvider>
+        <ImageProvider>
           <App />
-        </UserProvider>
-      </ImageProvider>
+        </ImageProvider>
+      </UserProvider>
     </HelmetProvider>
   </React.StrictMode>
 );

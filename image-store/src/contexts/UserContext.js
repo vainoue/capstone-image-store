@@ -18,16 +18,13 @@ const initialUser = {
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const { images } = useContext(ImageContext);
+  //const { images } = useContext(ImageContext);
 
   const [user, setUser] = useState(null);
   const [userInfo, setUserInfo] = useState(() => {
     const storedUserInfo = localStorage.getItem('userInfo');
     return storedUserInfo ? JSON.parse(storedUserInfo) : initialUser;
   });
-
-  console.log(userInfo);
-  console.log(localStorage.getItem('userInfo'));
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -74,10 +71,10 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  const handleAddToCart = async (imageId) => {
+  const handleAddToCart = async (image) => {
     // Check if the image already exists in the cart
     const isAlreadyInCart = userInfo.cart.some(
-      (image) => image._id === imageId
+      (item) => item._id === image._id
     );
 
     if (isAlreadyInCart) {
@@ -87,49 +84,87 @@ export const UserProvider = ({ children }) => {
     }
 
     // Add the image to the cart
-    const addedImage = images.find((image) => image._id === imageId);
     const updatedUserInfo = {
       ...userInfo,
-      cart: [...userInfo.cart, addedImage],
+      cart: [...userInfo.cart, image],
     };
     setUserInfo(updatedUserInfo);
     localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
-    console.log(`Adding image`, addedImage);
+    console.log(`Adding image`, image);
     console.log(updatedUserInfo);
+
+    if (user) {
+      const token = user && (await user.getIdToken());
+      const headers = token ? { authtoken: token } : {};
+      updateUser(updatedUserInfo, headers);
+    }
   };
 
-  const handleDeleteFromCart = (imageId) => {
+  const handleDeleteFromCart = async (imageId) => {
     const updatedCart = userInfo.cart.filter((image) => image._id !== imageId);
     const updatedUserInfo = { ...userInfo, cart: updatedCart };
 
     setUserInfo(updatedUserInfo);
     localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
+
+    if (user) {
+      const token = user && (await user.getIdToken());
+      const headers = token ? { authtoken: token } : {};
+
+      updateUser(updatedUserInfo, headers);
+    }
   };
 
-  const handleToggleLike = (imageId) => {
-    const isLiked = userInfo.likes.some((image) => image._id === imageId);
+  const handleToggleLike = async (selectedImage) => {
+    const isLiked = userInfo.likes.some(
+      (image) => image._id === selectedImage._id
+    );
+
+    let updatedUserInfo;
 
     if (isLiked) {
       // Image is already liked, remove it from user's liked images
       const updatedLikes = userInfo.likes.filter(
-        (image) => image._id !== imageId
+        (image) => image._id !== selectedImage._id
       );
-      const updatedUserInfo = { ...userInfo, likes: updatedLikes };
+      updatedUserInfo = { ...userInfo, likes: updatedLikes };
       setUserInfo(updatedUserInfo);
       localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
-      console.log(`Removed image ${imageId} from liked images`);
+      console.log(`Removed image ${selectedImage._id} from liked images`);
       console.log(updatedUserInfo);
     } else {
       // Image is not liked, add it to user's liked images
-      const addedImage = images.find((image) => image._id === imageId);
-      const updatedUserInfo = {
+      updatedUserInfo = {
         ...userInfo,
-        likes: [...userInfo.likes, addedImage],
+        likes: [...userInfo.likes, selectedImage],
       };
       setUserInfo(updatedUserInfo);
       localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
-      console.log(`Added image`, addedImage);
+      console.log(`Added image`, selectedImage);
       console.log(updatedUserInfo);
+    }
+
+    if (user) {
+      const token = user && (await user.getIdToken());
+      const headers = token ? { authtoken: token } : {};
+
+      updateUser(updatedUserInfo, headers);
+    }
+  };
+
+  const updateUser = async (updatedUser, headers) => {
+    try {
+      // Update User in the database
+      await axios.post('/api/user/update/', updatedUser, { headers });
+
+      // Refetch data
+      const response = await axios.get(`/api/user/${user.uid}`);
+      setUser(user);
+      setUserInfo(response.data);
+      localStorage.setItem('userInfo', JSON.stringify(response.data));
+    } catch (error) {
+      console.error('Error updating user:', error);
+      // Handle the error appropriately (e.g., display an error message)
     }
   };
 
@@ -144,6 +179,7 @@ export const UserProvider = ({ children }) => {
         handleAddToCart,
         handleToggleLike,
         handleDeleteFromCart,
+        updateUser,
       }}
     >
       {children}

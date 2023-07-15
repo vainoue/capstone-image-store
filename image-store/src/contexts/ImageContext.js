@@ -5,7 +5,7 @@ import { UserContext } from './UserContext';
 export const ImageContext = createContext();
 
 export const ImageProvider = ({ children }) => {
-  //const { userInfo } = useContext(UserContext);
+  const { userInfo } = useContext(UserContext);
   const [images, setImages] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const imagesPerPage = 24;
@@ -16,11 +16,11 @@ export const ImageProvider = ({ children }) => {
       try {
         let url = `/api/images?page=${currentPage}&perPage=${imagesPerPage}`;
 
-        // // Check if user role is "admin"
-        // if (userInfo.role === 'admin') {
-        //   // Append filter query parameter to fetch only "Active" images
-        url += '&status=All';
-        // }
+        // Check if user role is "admin"
+        if (userInfo.role === 'admin') {
+          // Append filter query parameter to fetch only "Active" images
+          url += '&status=All';
+        }
 
         const response = await fetch(url);
         const data = await response.json();
@@ -32,7 +32,7 @@ export const ImageProvider = ({ children }) => {
     };
 
     fetchImages();
-  }, [currentPage, imagesPerPage]);
+  }, [currentPage, imagesPerPage, userInfo.role]);
 
   const paginate = (event, pageNumber) => {
     setCurrentPage(pageNumber);
