@@ -11,7 +11,7 @@ import axios from 'axios';
 
 const Profile = () => {
   //get the userId from URL
-  const { user, userInfo } = useContext(UserContext);
+  const { user, userInfo, updateUser } = useContext(UserContext);
 
   const [error, setError] = useState();
 
@@ -28,21 +28,20 @@ const Profile = () => {
     address: Yup.string().required('Address is required'),
   });
 
-  const updateUser = async (e) => {
+  const handleSubmit = async (values) => {
     const token = user && (await user.getIdToken());
     const headers = token ? { authtoken: token } : {};
-    console.log(headers);
-    await axios.post(
-      '/api/user/profile/',
-      {
-        email: e.email,
-        firstName: e.firstName,
-        lastName: e.lastName,
-        phone: e.phone,
-        address: e.address,
-      },
-      { headers }
-    );
+
+    try {
+      const updatedUser = {
+        ...userInfo,
+        ...values,
+      };
+
+      updateUser(updatedUser, headers);
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   //navigate('/profile/:userId');
@@ -80,7 +79,7 @@ const Profile = () => {
                 address: userInfo.address,
               }}
               validationSchema={validationSchema}
-              onSubmit={updateUser}
+              onSubmit={handleSubmit}
             >
               <Form>
                 <div>

@@ -203,22 +203,35 @@ app.use(async (req, res, next) => {
   next();
 });
 
-app.post('/api/user/profile/', async (req, res) => {
+app.post('/api/user/update/', async (req, res) => {
   const { uid } = req.user;
 
   try {
-    const { email, firstName, lastName, phone, address } = req.body;
-
+    const {
+      email,
+      firstName,
+      lastName,
+      phone,
+      address,
+      cart,
+      transaction,
+      likes,
+    } = req.body;
+    console.log(uid);
+    console.log(req.body);
     // Update the user document in the MongoDB collection
     const updatedUser = await db.collection('users').findOneAndUpdate(
       { uid: uid }, // Filter criteria
       {
         $set: {
-          email: email,
-          firstName: firstName,
-          lastName: lastName,
-          phone: phone,
-          address: address,
+          ...(email & { email }),
+          ...(firstName && { firstName }),
+          ...(lastName && { lastName }),
+          ...(phone && { phone }),
+          ...(address && { address }),
+          ...(cart && { cart }),
+          ...(transaction && { transaction }),
+          ...(likes && { likes }),
         },
       },
       { returnOriginal: false } // Set returnOriginal option to false to get the updated document

@@ -140,7 +140,7 @@ const ImageInformation = () => {
                         aria-label="modify"
                         type="button"
                         style={{ color: '#f474b4' }}
-                        onClick={() => handleToggleLike(image._id)}
+                        onClick={() => handleToggleLike(image)}
                       >
                         <BsSuitHeartFill className="fs-2" />
                       </IconButton>
@@ -150,7 +150,7 @@ const ImageInformation = () => {
                         aria-label="modify"
                         type="button"
                         style={{ color: '#f474b4' }}
-                        onClick={() => handleToggleLike(image._id)}
+                        onClick={() => handleToggleLike(image)}
                       >
                         <BsSuitHeart className="fs-2" />
                       </IconButton>
@@ -161,7 +161,7 @@ const ImageInformation = () => {
                 <CartButton
                   className="addToCart"
                   fullWidth={true}
-                  onClick={() => handleAddToCart(image._id)}
+                  onClick={() => handleAddToCart(image)}
                   disabled={isInCart}
                 >
                   {isInCart ? (

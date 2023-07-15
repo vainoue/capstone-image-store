@@ -68,7 +68,7 @@ const ImageCard = ({ image, handleEdit }) => {
                           aria-label="modify"
                           type="button"
                           style={{ color: '#f474b4' }}
-                          onClick={() => handleToggleLike(image._id)}
+                          onClick={() => handleToggleLike(image)}
                         >
                           <BsSuitHeartFill className="fs-2" />
                         </IconButton>
@@ -78,7 +78,7 @@ const ImageCard = ({ image, handleEdit }) => {
                           aria-label="modify"
                           type="button"
                           style={{ color: '#f474b4' }}
-                          onClick={() => handleToggleLike(image._id)}
+                          onClick={() => handleToggleLike(image)}
                         >
                           <BsSuitHeart className="fs-2" />
                         </IconButton>
@@ -107,7 +107,7 @@ const ImageCard = ({ image, handleEdit }) => {
               <div className="action-bar">
                 <CartButton
                   className="addToCart p-2 me-2"
-                  onClick={() => handleAddToCart(image._id)}
+                  onClick={() => handleAddToCart(image)}
                   disabled={isInCart}
                 >
                   {isInCart ? (
