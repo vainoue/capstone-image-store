@@ -111,12 +111,14 @@ app.post('/api/user/register', async (req, res) => {
   }
 });
 
-// handle user login
+// Define a route for handling user login
 app.get('/api/user/:uid', async (req, res) => {
   try {
+    // Search user information in Database from firebase uid
     const uid = req.params.uid;
     const user = await db.collection('users').findOne({ uid });
 
+    // Create a new user collection
     if (user) {
       const currentUser = {
         email: user.email,
@@ -130,6 +132,7 @@ app.get('/api/user/:uid', async (req, res) => {
         transaction: user.transaction,
       };
 
+      // return currentUser
       res.status(200).json(currentUser);
     } else {
       res.status(404).json({ error: 'User not found' });
@@ -141,26 +144,29 @@ app.get('/api/user/:uid', async (req, res) => {
   }
 });
 
+// Define a route for handling get all images
 app.get('/api/images', async (req, res) => {
   // Extract the query parameters
   const currentPage = req.query.page;
   const imagesPerPage = req.query.perPage;
-  //const isAll = req.query.status === 'All';
+  const isAll = req.query.status === 'All';
 
   const indexOfLastItem = currentPage * imagesPerPage;
   const indexOfFirstItem = indexOfLastItem - imagesPerPage;
   try {
-    const images = await db.collection('images').find().toArray();
-    // let images;
-    // if (isAll) {
-    //   images = await db.collection('images').find().toArray();
-    // } else {
-    //   images = await db
-    //     .collection('images')
-    //     .find({ status: 'Active' })
-    //     .toArray();
-    // }
+    // Get images imformation from database
+    let images;
+    if (isAll) {
+      images = await db.collection('images').find().toArray();
+    } else {
+      // if not all Get only Active images from database
+      images = await db
+        .collection('images')
+        .find({ status: 'Active' })
+        .toArray();
+    }
 
+    // Set currentItems base on imagesPerPage
     let currentItems;
     if (images.length <= imagesPerPage) {
       currentItems = images; // Use all images if there are fewer than imagesPerPage
@@ -174,7 +180,10 @@ app.get('/api/images', async (req, res) => {
       return { ...item, imageLocation: imageURL };
     });
 
+    // Calculate totalPages
     const totalPages = Math.ceil(images.length / imagesPerPage);
+
+    // return currentItems and totalPages
     res.json({ images: currentItems, totalPages: totalPages });
   } catch (error) {
     res
@@ -183,10 +192,7 @@ app.get('/api/images', async (req, res) => {
   }
 });
 
-// app.post('/api/url', async (req, res) => {
-//   console.log(req.body);
-// });
-
+// Verify firebase authtoken
 app.use(async (req, res, next) => {
   const { authtoken } = req.headers;
 
@@ -203,10 +209,13 @@ app.use(async (req, res, next) => {
   next();
 });
 
+// Define a route for handling update user information
 app.post('/api/user/update/', async (req, res) => {
+  // verify user
   const { uid } = req.user;
 
   try {
+    // Extract the body parameters
     const {
       email,
       firstName,
@@ -217,8 +226,7 @@ app.post('/api/user/update/', async (req, res) => {
       transaction,
       likes,
     } = req.body;
-    console.log(uid);
-    console.log(req.body);
+
     // Update the user document in the MongoDB collection
     const updatedUser = await db.collection('users').findOneAndUpdate(
       { uid: uid }, // Filter criteria
@@ -234,16 +242,17 @@ app.post('/api/user/update/', async (req, res) => {
           ...(likes && { likes }),
         },
       },
-      { returnOriginal: false } // Set returnOriginal option to false to get the updated document
+      // Set returnOriginal option to false to get the updated document
+      { returnOriginal: false }
     );
 
+    // throws error if updatedUser is null
     if (!updatedUser.value) {
       throw new Error('User not found');
     }
 
-    console.log(updatedUser.value); // Log the updated user document
-
-    res.sendStatus(200); // Send a successful response
+    // Send a successful response
+    res.sendStatus(200);
   } catch (error) {
     console.error(error);
     res.status(500).send('An error occurred while updating the user profile');
@@ -251,25 +260,19 @@ app.post('/api/user/update/', async (req, res) => {
 });
 
 app.get('/api/images/:imageId', async (req, res) => {
+  // Extract the body parameters
   const { imageId } = req.params;
-  const id = new ObjectId(imageId);
 
-  //const { uid } = req.user;
-  const status = { isLiked: false, isInCart: false };
+  // get selected image information from database
+  const id = new ObjectId(imageId);
   const image = await db.collection('images').findOne({ _id: id });
 
   if (image) {
-    // const userInfo = await db.collection('users').findOne({ uid: uid });
-
-    // status.isLiked =
-    //   uid && userInfo.likes.some((likedImage) => likedImage === image._id);
-    // status.isInCart =
-    //   uid && userInfo.likes.some((cartImage) => cartImage === image._id);
     const imageURL = `/images/raws/${path.basename(image.imageLocation)}`;
     const updatedImage = { ...image, imageLocation: imageURL };
 
-    res.json({ image: updatedImage, status: status });
-    console.log(updatedImage);
+    // return images
+    res.json({ image: updatedImage });
   } else {
     res.sendStatus(404);
   }
@@ -277,8 +280,10 @@ app.get('/api/images/:imageId', async (req, res) => {
 
 app.post('/api/images/update', async (req, res) => {
   try {
+    // Extract the body parameters
     const { _id, title, description, price, tags, status } = req.body;
 
+    // Update the image document in the MongoDB collection
     await db.collection('images').findOneAndUpdate(
       { _id: new ObjectId(_id) },
       {
@@ -294,6 +299,7 @@ app.post('/api/images/update', async (req, res) => {
       { returnDocument: 'after' }
     );
 
+    // Send a successful response
     res.sendStatus(200);
   } catch (error) {
     console.error(error);
