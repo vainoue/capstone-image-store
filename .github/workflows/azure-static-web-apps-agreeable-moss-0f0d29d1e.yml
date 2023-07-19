@@ -28,6 +28,8 @@ jobs:
           node-version: '14'
 
       - name: Build application
+        env:
+          CI: false
         run: cd image-store && npm install && npm run build
 
       - name: Build And Deploy
