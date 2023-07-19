@@ -28,7 +28,7 @@ jobs:
           node-version: '14'
 
       - name: Build application
-        run: npm install && npm run build
+        run: cd image-store && npm install && npm run build
 
       - name: Build And Deploy
         id: builddeploy
