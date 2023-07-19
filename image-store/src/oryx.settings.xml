@@ -1,0 +1,21 @@
+<!-- oryx.settings.xml -->
+<oryx>
+  <platforms>
+    <platform name="nodejs">
+      <language>nodejs</language>
+      <run-time>node</run-time>
+      <platform-version>14</platform-version>
+    </platform>
+    <platform name="npm">
+      <language>javascript</language>
+      <run-time>node</run-time>
+      <platform-version>14</platform-version>
+    </platform>
+    <platform name="react">
+      <language>javascript</language>
+      <run-time>node</run-time>
+      <platform-version>14</platform-version>
+      <start-application-command>node index.js</start-application-command>
+    </platform>
+  </platforms>
+</oryx>
