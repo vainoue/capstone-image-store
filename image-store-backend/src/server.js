@@ -30,8 +30,15 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(cors());
 
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../../image-store/build')));
+
+  app.get(/^(?!\/api).+/, (req, res) => {
+    res.sendFile(path.join(__dirname, '../../image-store/build/index.html'));
+  });
+}
 // Serve static files from the "images" directory
-app.use('/images', express.static(path.join(__dirname, 'images')));
+//app.use('/images', express.static(path.join(__dirname, '../public/images')));
 
 const upload = multer({ dest: 'uploads/' });
 app.post(
@@ -49,7 +56,24 @@ app.post('/payment/create-checkout-session', async (req, res) => {
   const { product } = req.body;
   console.log(product);
 
+  // const fp = fs.readFileSync('/images/raws/test.jpg');
+  // const upload = await stripe.files.create({
+  //   file: {
+  //     data: fp,
+  //     name: 'file.jpg',
+  //     type: 'application.octet-stream',
+  //   },
+  //   purpose: 'dispute_evidence',
+  // });
+
+  // console.log(upload);
+
   const lineItems = product.map((image) => {
+    const imageURL = `http://localhost:8080/images/raws/${path.basename(
+      image.imageLocation
+    )}`;
+
+    console.log(imageURL);
     return {
       price_data: {
         currency: 'cad',
@@ -57,7 +81,7 @@ app.post('/payment/create-checkout-session', async (req, res) => {
         product_data: {
           name: image.title,
           description: image.description,
-          images: ['https://example.com/t-shirt.png'],
+          images: [imageURL],
         },
       },
       quantity: 1,
@@ -269,6 +293,7 @@ app.get('/api/images/:imageId', async (req, res) => {
 
   if (image) {
     const imageURL = `/images/raws/${path.basename(image.imageLocation)}`;
+    console.log(imageURL);
     const updatedImage = { ...image, imageLocation: imageURL };
 
     // return images
