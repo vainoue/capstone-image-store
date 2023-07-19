@@ -12,9 +12,24 @@ import multer from 'multer';
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const PORT = process.env.PORT || 8080;
 
 // initialize firebase
-const credentials = JSON.parse(fs.readFileSync('./credentials.json'));
+// const credentials = JSON.parse(fs.readFileSync('./credentials.json'));
+const credentials = {
+  type: process.env.FIREBASE_TYPE,
+  project_id: process.env.FIREBASE_PROJECT_ID,
+  private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
+  private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+  client_email: process.env.FIREBASE_CLIENT_EMAIL,
+  client_id: process.env.FIREBASE_CLIENT_ID,
+  auth_uri: process.env.FIREBASE_AUTH_URI,
+  token_uri: process.env.FIREBASE_TOKEN_URI,
+  auth_provider_x509_cert_url: process.env.FIREBASE_AUTH_PROVIDER_X509_CERT_URL,
+  client_x509_cert_url: process.env.FIREBASE_CLIENT_X509_CERT_URL,
+  universe_domain: process.env.FIREBASE_UNIVERSE_DOMAIN,
+};
+
 admin.initializeApp({
   credential: admin.credential.cert(credentials),
 });
@@ -31,16 +46,16 @@ app.use(express.json());
 app.use(cors());
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../../image-store/build')));
+  app.use(express.static(path.join(__dirname, 'client/build')));
 
   app.get(/^(?!\/api).+/, (req, res) => {
-    res.sendFile(path.join(__dirname, '../../image-store/build/index.html'));
+    res.sendFile(path.join(__dirname, 'client/build/index.html'));
   });
 }
 // Serve static files from the "images" directory
 //app.use('/images', express.static(path.join(__dirname, '../public/images')));
 
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: 'public/images/raws' });
 app.post(
   '/test_upload',
   upload.single('product_image'),
@@ -69,7 +84,7 @@ app.post('/payment/create-checkout-session', async (req, res) => {
   // console.log(upload);
 
   const lineItems = product.map((image) => {
-    const imageURL = `http://localhost:8080/images/raws/${path.basename(
+    const imageURL = `http://localhost:${PORT}/images/raws/${path.basename(
       image.imageLocation
     )}`;
 
@@ -94,8 +109,8 @@ app.post('/payment/create-checkout-session', async (req, res) => {
     payment_method_types: ['card'],
     line_items: lineItems,
     mode: 'payment',
-    success_url: 'http://localhost:3000/success',
-    cancel_url: 'http://localhost:3000/cancel',
+    success_url: `http://localhost:${PORT}/success`,
+    cancel_url: `http://localhost:${PORT}/cancel`,
   });
   res.json({ id: session.id });
 });
@@ -334,7 +349,7 @@ app.post('/api/images/update', async (req, res) => {
 
 connectToDb(() => {
   console.log('Successfully Connect to Database');
-  app.listen(8080, () => {
-    console.log('Server is listening on port 8080');
+  app.listen(PORT, () => {
+    console.log('Server is listening on port ' + PORT);
   });
 });
