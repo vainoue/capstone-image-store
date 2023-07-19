@@ -20,7 +20,7 @@ jobs:
           submodules: true
 
       - name: Move to project directory
-        run: cd capstone-image-store/image-store
+        run: cd simage-store
       
       - name: Install Node.js and npm
         uses: actions/setup-node@v2
