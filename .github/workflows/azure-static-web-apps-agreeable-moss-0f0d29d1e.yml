@@ -30,7 +30,7 @@ jobs:
       - name: Build application
         env:
           CI: false
-        run: cd image-store && npm install && npm run build --build
+        run: cd image-store && npm install && npm run build -- --output=build
       
       - name: Build And Deploy
         id: builddeploy
