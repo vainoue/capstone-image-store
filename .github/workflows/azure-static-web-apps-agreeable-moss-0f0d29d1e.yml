@@ -27,11 +27,12 @@ jobs:
         with:
           node-version: '14'
 
-      #- name: Build application
-      #  env:
-      #    CI: false
+      - name: Build application
+        env:
+          CI: false
       #  run: cd image-store && npm install && npm run build
-
+        run: cd image-store & npm install
+        
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
